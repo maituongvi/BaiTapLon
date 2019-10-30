@@ -1,0 +1,14 @@
+
+/*AnchorPane{
+    
+    -fx-background-color: #ff00cc;
+}*/
+/*.body{
+    -fx-background-image: url('b.jpg');
+}*/
+/*-fx-background-image: url('D:\Studying\OOP\QuanLyKhachSan\src\a.jpg');*/
+.body{
+    -fx-background-image: url("/quanlykhachsan/Images/a1.jpg");
+    -fx-background-size: 100% 100%;
+    -fx-background-color: #eedecd  
+}
