@@ -5,13 +5,18 @@
  */
 package quanlykhachsan;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 
 /**
@@ -28,6 +33,15 @@ public class FXMLDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
       
     } 
+    
+    public void DangNhap(ActionEvent e) throws IOException{
+        Parent login = FXMLLoader.load(getClass().getResource("DangNhap.fxml"));
+        Scene loginScene = new Scene(login);
+        
+        Stage window = (Stage)((Node)e.getSource()).getScene().getWindow();
+        window.setScene(loginScene);
+        window.show();
+    }
    
     
 }
