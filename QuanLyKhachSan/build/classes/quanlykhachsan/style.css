@@ -1,8 +1,10 @@
 
-/*AnchorPane{
+
+AnchorPane.NhapNguoiDung{
     
-    -fx-background-color: #ff00cc;
-}*/
+    -fx-background-image: url("/quanlykhachsan/Images/nai.jpg");
+    -fx-background-size: 100% 100%;
+}
 /*.body{
     -fx-background-image: url('b.jpg');
 }*/
@@ -16,4 +18,31 @@ text.createAccount{
     -fx-background-color:  #265763;
     -fx-font-size: 2em;
     
+}
+.tieude{
+    -fx-text-fill:  #265763;
+/*    -fx-font-weight: bold;*/
+    -fx-font-size: 1em; 
+    -fx-font-family:  quicksand;
+}
+
+.combo{
+    -fx-text-fill: #7cdddd;
+    -fx-font-family:  helvetica;
+}
+
+Button.timkiem{
+    -fx-background-radius: 75;
+    -fx-background-color:  #265763;
+    -fx-text-fill: white;
+}
+
+
+.bodySearch{
+    -fx-background-image: url("/quanlykhachsan/Images/a1.jpg");
+    -fx-background-size: 100% 100%;
+    -fx-background-color: #eedecd 
+}
+button.timkiem1{
+    -fx-background-image: url("/quanlykhachsan/Images/a1.jpg");
 }

@@ -1,9 +1,10 @@
 
 
-/*AnchorPane{
+AnchorPane.NhapNguoiDung{
     
-    -fx-background-color: #ff00cc;
-}*/
+    -fx-background-image: url("/quanlykhachsan/Images/nai.jpg");
+    -fx-background-size: 100% 100%;
+}
 /*.body{
     -fx-background-image: url('b.jpg');
 }*/
@@ -20,8 +21,8 @@ text.createAccount{
 }
 .tieude{
     -fx-text-fill:  #265763;
-    -fx-font-weight: bold;
-    -fx-font-size: 1.5em; 
+/*    -fx-font-weight: bold;*/
+    -fx-font-size: 1em; 
     -fx-font-family:  quicksand;
 }
 
@@ -38,7 +39,10 @@ Button.timkiem{
 
 
 .bodySearch{
-    -fx-background-image: url("/quanlykhachsan/Images/g.jpg");
+    -fx-background-image: url("/quanlykhachsan/Images/a1.jpg");
     -fx-background-size: 100% 100%;
     -fx-background-color: #eedecd 
+}
+button.timkiem1{
+    -fx-background-image: url("/quanlykhachsan/Images/a1.jpg");
 }
