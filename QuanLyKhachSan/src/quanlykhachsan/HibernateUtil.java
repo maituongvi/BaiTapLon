@@ -6,7 +6,7 @@
 package quanlykhachsan;
 
 
-import QLKS.pojo.TaiKhoan;
+import QLKS.pojo.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -25,6 +25,7 @@ public class HibernateUtil {
         Configuration configure = new Configuration();
         configure.configure("hibernate.cfg.xml");
         configure.addAnnotatedClass(TaiKhoan.class);
+        configure.addAnnotatedClass(KhachHang.class);
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
                 applySettings(configure.getProperties());
         FACTORY = configure.buildSessionFactory(builder.build());

@@ -21,12 +21,11 @@ public class test {
     public static void main(String[] args) {
         SessionFactory factory = HibernateUtil.getSessionFactory();
         Session session = factory.openSession();
-        Query q = session.createQuery("from TaiKhoan");
-        List<TaiKhoan> a = q.list();
+        Query q = session.createQuery("from KhachHang");
+        List<KhachHang> a = q.list();
         a.forEach(e->{
-            System.out.println(e.getIdNhanVien());
-            System.out.println(e.getTaiKhoan());
-            System.out.println(e.getMatKhau());
+            System.out.println(e.getMaKH());
+           
         });
         session.close();
     }
