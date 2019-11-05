@@ -116,7 +116,7 @@
             </VBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: black; -fx-text-fill: white; -fx-border-radius: 100px;" text="Watching">
+                  <Button mnemonicParsing="false" onAction="#loadDSKhachHang" prefHeight="30.0" prefWidth="85.0" style="-fx-background-color: black; -fx-text-fill: white; -fx-border-radius: 100px;" text="Watching">
                      <HBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </HBox.margin>
@@ -146,15 +146,14 @@
             </HBox>
          </children>
       </VBox>
-      <AnchorPane layoutX="509.0" layoutY="23.0" opacity="0.8" prefHeight="757.0" prefWidth="694.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="470.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="23.0">
+      <AnchorPane layoutX="509.0" layoutY="23.0" opacity="0.86" prefHeight="757.0" prefWidth="694.0" style="-fx-background-color: rgb(255,255,255,0.5);" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="470.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="23.0">
          <children>
-            <TableView prefHeight="200.0" prefWidth="694.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TableView fx:id="tbKhachHang" prefHeight="200.0" prefWidth="694.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columns>
-                <TableColumn prefWidth="65.0" text="ID" />
-                <TableColumn prefWidth="249.0" text="Name" />
-                  <TableColumn prefWidth="84.0" text="Gender" />
-                  <TableColumn prefWidth="140.0" text="Date of Birth" />
-                  <TableColumn prefWidth="155.0" text="Phone" />
+                <TableColumn fx:id="colName" prefWidth="249.0" text="Name" />
+                  <TableColumn fx:id="colGender" prefWidth="109.0" text="Gender" />
+                  <TableColumn fx:id="colDateOfBirth" prefWidth="152.0" text="Date of Birth" />
+                  <TableColumn fx:id="colPhone" prefWidth="183.0" text="Phone" />
               </columns>
             </TableView>
          </children></AnchorPane>
