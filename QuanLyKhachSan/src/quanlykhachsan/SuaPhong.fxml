@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="590.0" prefWidth="406.0" style="-fx-background-color: #265763;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="quanlykhachsan.SuaPhongController">
+   <children>
+      <VBox alignment="CENTER" layoutX="24.0" layoutY="11.0" opacity="0.9" prefHeight="466.0" prefWidth="373.0" style="-fx-background-color: white;" stylesheets="@style.css" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+         <children>
+            <Label prefHeight="35.0" prefWidth="354.0" style="-fx-font-weight: bold;" text="SỬA THÔNG TIN PHÒNG" textAlignment="CENTER">
+               <font>
+                  <Font name="Comic Sans MS" size="24.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" />
+               </VBox.margin>
+            </Label>
+            <VBox alignment="CENTER" layoutX="20.0" layoutY="175.0" prefHeight="402.0" prefWidth="367.0" style="-fx-background-radius: 100 px; -fx-border-color: black; -fx-border-radius: 30px; -fx-border-width: 0.5px; -fx-background-color: white;">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="98.0" prefWidth="305.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="300.0" style="-fx-font-weight: bold;" text="Mã phòng">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="60.0" right="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <HBox maxWidth="-Infinity" prefHeight="43.0" prefWidth="395.0">
+                           <children>
+                              <TextField prefHeight="25.0" prefWidth="193.0" promptText="Nhập mã phòng">
+                                 <HBox.margin>
+                                    <Insets left="60.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="87.0" prefWidth="375.0">
+                     <children>
+                        <Label prefHeight="19.0" prefWidth="276.0" style="-fx-font-weight: bold;" text="Sức chứa">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="10.0" right="10.0" />
+                           </VBox.margin>
+                           <padding>
+                              <Insets left="50.0" />
+                           </padding>
+                        </Label>
+                        <HBox maxWidth="-Infinity" prefHeight="43.0" prefWidth="395.0">
+                           <children>
+                              <TextField prefHeight="25.0" prefWidth="193.0" promptText="Nhập số người">
+                                 <HBox.margin>
+                                    <Insets left="60.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="98.0" prefWidth="305.0">
+                     <children>
+                        <Label prefHeight="19.0" prefWidth="277.0" style="-fx-font-weight: bold;" text="Loại phòng">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="10.0" right="10.0" />
+                           </VBox.margin>
+                           <padding>
+                              <Insets left="50.0" />
+                           </padding>
+                        </Label>
+                        <HBox maxWidth="-Infinity" prefHeight="43.0" prefWidth="395.0">
+                           <children>
+                              <TextField prefHeight="25.0" prefWidth="193.0" promptText="Nhập loại phòng">
+                                 <HBox.margin>
+                                    <Insets left="60.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="87.0" prefWidth="375.0">
+                     <children>
+                        <Label prefHeight="19.0" prefWidth="278.0" style="-fx-font-weight: bold;" text="Giá phòng">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="10.0" right="10.0" />
+                           </VBox.margin>
+                           <padding>
+                              <Insets left="50.0" />
+                           </padding>
+                        </Label>
+                        <HBox maxWidth="-Infinity" prefHeight="43.0" prefWidth="395.0">
+                           <children>
+                              <TextField prefHeight="25.0" prefWidth="193.0" promptText="Nhập giá">
+                                 <HBox.margin>
+                                    <Insets left="60.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="94.0" prefWidth="359.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="300.0" style="-fx-font-weight: bold;" text="Tìm kiếm bằng tình trạng phòng">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="30.0" right="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <HBox maxWidth="-Infinity" prefHeight="43.0" prefWidth="395.0">
+                           <children>
+                              <RadioButton fx:id="rbAvS" mnemonicParsing="false" prefHeight="30.0" prefWidth="200.0" text="Phòng trống">
+                                 <padding>
+                                    <Insets left="30.0" right="20.0" />
+                                 </padding>
+                              </RadioButton>
+                              <RadioButton fx:id="rbBusyS" mnemonicParsing="false" prefHeight="30.0" prefWidth="166.0" text="Phòng đã đặt" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="98.0" prefWidth="305.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="300.0" style="-fx-font-weight: bold;" text="Ảnh phòng">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="60.0" right="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <HBox maxWidth="-Infinity" prefHeight="43.0" prefWidth="395.0" />
+                     </children>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets left="10.0" right="10.0" />
+               </VBox.margin>
+            </VBox>
+            <HBox prefHeight="38.0" prefWidth="305.0">
+               <children>
+                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="147.0" style="-fx-background-color: #265763;" styleClass="search" text="SỬA">
+                     <HBox.margin>
+                        <Insets left="80.0" top="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </VBox>
+   </children>
+</AnchorPane>
