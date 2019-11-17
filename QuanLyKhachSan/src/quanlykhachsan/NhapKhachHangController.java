@@ -116,10 +116,41 @@ public class NhapKhachHangController implements Initializable {
             return row;
         });
         
+        btnXoa.setOnAction(et->{
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Bạn chắc chưa?");
+            alert.showAndWait().ifPresent(rs ->{
+                if(rs == ButtonType.OK){
+                    KhachHang kh = this.tbKhachHang.getSelectionModel().getSelectedItem();
+                    Utils.xoaKhachHang(kh);
+                    
+                }
+            reloadTableView(Utils.laydsKH("", 0));
+            this.cleanBangNhapThongTinKH();
+               
+            });
+                
+        });
+        
     }    
     
     public void Them(ActionEvent event){
-        this.kiemTraNhapHopLe();
+        if(checkNhapTenKhachHang(name.getText()) == false){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Lỗi nhập !!! ");
+            a.setContentText(" Vui lòng nhập lại tên hợp lệ.");
+            a.show();
+            return;
+        }
+        
+        
+        if(checkSDT(phone.getText()) == false){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Lỗi nhập !!! ");
+            a.setContentText(" Vui lòng nhập lại số điện thoại hợp lệ. VD:0356847078");
+            a.show();
+            return;
+        }
         Session session = factory.openSession();
         Transaction trans =null;
         
@@ -136,6 +167,7 @@ public class NhapKhachHangController implements Initializable {
             a.setTitle("Kết quả ");
             a.setContentText(" Thêm khách hàng thành công");
             a.show();
+            this.cleanBangNhapThongTinKH();
             reloadTableView(Utils.laydsKH("", 0));
         } catch (Exception e) {
             if (trans == null)
@@ -170,6 +202,22 @@ public class NhapKhachHangController implements Initializable {
             a.show();
             return;
         }
+        if(checkNhapTenKhachHang(name.getText()) == false){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Lỗi nhập !!! ");
+            a.setContentText(" Vui lòng nhập lại tên hợp lệ.");
+            a.show();
+            return;
+        }
+        
+        
+        if(checkSDT(phone.getText()) == false){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Lỗi nhập !!! ");
+            a.setContentText(" Vui lòng nhập lại số điện thoại hợp lệ. VD:0356847078");
+            a.show();
+            return;
+        }
         kh.setTenKH(this.name.getText());
         kh.setGioiTinh((String) comboBox.getValue());
         kh.setNgaySinh(Date.from(this.dateOfBirth.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -180,6 +228,7 @@ public class NhapKhachHangController implements Initializable {
         a.setTitle("Thông báo");
         a.setContentText("Cập nhật khách hàng thành công.");
         a.show();
+        this.cleanBangNhapThongTinKH();
         
         reloadTableView(Utils.laydsKH("", 0));
     }
@@ -208,25 +257,6 @@ public class NhapKhachHangController implements Initializable {
         return check;
     }
     
-    
-    
-    public void deleteRowOnTable(ActionEvent event){
-        btnXoa.setOnAction(et->{
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setContentText("Bạn chắc chưa?");
-            alert.showAndWait().ifPresent(rs ->{
-                if(rs == ButtonType.OK){
-                    KhachHang kh = this.tbKhachHang.getSelectionModel().getSelectedItem();
-                    Utils.xoaKhachHang(kh);
-                    reloadTableView(Utils.laydsKH("", 0));
-                }
-               
-            });
-                
-        });
-    }
-    
-    
     private void reloadTableView(List<KhachHang> khachHang) {
         this.tbKhachHang.getItems().clear();
         this.tbKhachHang.getItems().addAll(khachHang);
@@ -236,23 +266,13 @@ public class NhapKhachHangController implements Initializable {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void kiemTraNhapHopLe(){
-        if(checkNhapTenKhachHang(name.getText()) == false){
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Lỗi nhập !!! ");
-            a.setContentText(" Vui lòng nhập lại tên hợp lệ.");
-            a.show();
-            return;
-        }
-        
-        
-        if(checkSDT(phone.getText()) == false){
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Lỗi nhập !!! ");
-            a.setContentText(" Vui lòng nhập lại số điện thoại hợp lệ. VD:0356847078");
-            a.show();
-            return;
-        }
+   
+    
+    public void cleanBangNhapThongTinKH(){
+        this.name.setText("");
+        this.phone.setText("");
+        this.comboBox.setValue(null);
+        this.dateOfBirth.setValue(null);
        
     }
     

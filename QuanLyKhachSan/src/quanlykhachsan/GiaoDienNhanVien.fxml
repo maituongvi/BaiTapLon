@@ -5,41 +5,57 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="467.0" prefWidth="853.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="quanlykhachsan.GiaoDienNhanVienController">
-   <children>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="vboxQL" stylesheets="@style.css" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="701.0" prefWidth="1035.0" styleClass="giaodienNV" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="quanlykhachsan.GiaoDienNhanVienController">
+   <center>
+      <HBox alignment="CENTER" opacity="0.9" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" text="Quản lý khách sạn" textAlignment="CENTER" textFill="#55839e">
+            <Button contentDisplay="TOP" layoutX="443.0" layoutY="222.0" mnemonicParsing="false" style="-fx-background-color: rgb(112,118,218,0.3);" text="Phòng">
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Images/bed.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
                <font>
-                  <Font name="Cambria Bold" size="41.0" />
+                  <Font name="System Bold" size="15.0" />
                </font>
-               <VBox.margin>
-                  <Insets bottom="60.0" />
-               </VBox.margin>
+               <HBox.margin>
+                  <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button contentDisplay="TOP" layoutX="443.0" layoutY="222.0" mnemonicParsing="false" onAction="#khachHang" style="-fx-background-color: rgb(112,118,218,0.3);" text="Khách hàng">
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" onDragDetected="#khachHang" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@Images/customer.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </center>
+   <top>
+      <VBox alignment="CENTER" prefHeight="92.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Quản lý khách sạn" textFill="#803232">
+               <font>
+                  <Font name="Cambria Math" size="45.0" />
+               </font>
             </Label>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Button contentDisplay="TOP" mnemonicParsing="false" prefHeight="31.0" prefWidth="65.0" style="-fx-background-color: rgb(112,118,218,0.3);" text="Button">
-                     <graphic>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@Images/customer.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <font>
-                        <Font name="Candara Light" size="19.0" />
-                     </font>
-                  </Button>
-               </children>
-            </HBox>
          </children>
       </VBox>
-   </children>
-</AnchorPane>
+   </top>
+</BorderPane>

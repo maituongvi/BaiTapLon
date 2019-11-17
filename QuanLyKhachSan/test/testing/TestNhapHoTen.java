@@ -25,4 +25,26 @@ public class TestNhapHoTen {
         boolean expected = true;
         Assert.assertEquals(expected, actual);
     }
+    
+    // nhập họ tên có kí tự số
+    @Test
+    public void test1(){
+        hoTen ="Mai Tường Vi1 ";
+        
+        boolean actual = NhapKhachHangController.checkNhapTenKhachHang(hoTen);
+        System.out.println(actual);
+        boolean expected = true;
+        Assert.assertEquals(expected, actual);
+    }
+    
+    // Nhập họ tên có kí tự đặc biệt
+    @Test
+    public void test2(){
+        hoTen ="Mai Tường Vi %#@";
+        
+        boolean actual = NhapKhachHangController.checkNhapTenKhachHang(hoTen);
+        System.out.println(actual);
+        boolean expected = true;
+        Assert.assertEquals(expected, actual);
+    }
 }

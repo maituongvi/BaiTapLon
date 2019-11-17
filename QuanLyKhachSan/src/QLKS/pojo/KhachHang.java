@@ -5,6 +5,7 @@
  */
 package QLKS.pojo;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -115,4 +116,14 @@ public class KhachHang {
     public void setSdt(String sdt) {
         this.sdt = sdt;
     }
+
+    @Override
+    public String toString() {
+        SimpleDateFormat fm = new SimpleDateFormat("dd-MM-yyyy");
+        String m = String.format("+Mã: %s\n+Tên: %s\n+Ngày sinh: %s\n+Giới tính: %s\n"
+                + "+Số điện thoại: %s", this.maKH,this.tenKH,fm.format(this.ngaySinh),this.gioiTinh,this.sdt);
+        return m; //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
 }

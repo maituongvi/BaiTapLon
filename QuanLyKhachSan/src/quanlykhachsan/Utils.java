@@ -39,6 +39,7 @@ public class Utils {
         session.saveOrUpdate(kh);
         trans.commit();
         
+        
         session.close();
     }
     

@@ -19,12 +19,15 @@ public class QuanLyKhachSan extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("NhapKhachHang.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("DangNhap.fxml"));
+        
         
         Scene scene = new Scene(root);
-        
+        stage.setTitle("Quản lý khách sạn");
+         
         stage.setScene(scene);
         stage.show();
+        stage.setResizable(false);
     }
 
     /**

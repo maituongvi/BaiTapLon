@@ -54,12 +54,7 @@ public class FXMLDocumentController implements Initializable {
         Session session = factory.openSession();
         Query q = session.createQuery("from TaiKhoan");
         List<TaiKhoan> rs = q.list();
-//        rs.forEach(e->{
-//            System.out.println(e.getIdNhanVien());
-//            System.out.println(e.getTaiKhoan());
-//            System.out.println(e.getMatKhau());
-//        });
-   
+
         rs.forEach(e-> {
            if(e.getTaiKhoan().equals(taiKhoan.getText())  && e.getMatKhau().equals(matKhau.getText()))
            {
