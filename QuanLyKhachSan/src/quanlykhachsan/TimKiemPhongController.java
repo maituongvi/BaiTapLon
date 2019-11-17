@@ -274,11 +274,6 @@ public class TimKiemPhongController implements Initializable {
         boolean check = true;
         if (this.kiemTraNhapPhong(ma, soNguoi,loai, gia, t, f) == false){
             content = checkNhap;
-                Alert a = new Alert(Alert.AlertType.INFORMATION);
-                a = new Alert(Alert.AlertType.ERROR);
-                a.setTitle("Kết quả ");
-                a.setContentText(" Số phòng bạn nhập đã tồn tại lieu ");
-                a.show();
             check = false;
         }
         else{
