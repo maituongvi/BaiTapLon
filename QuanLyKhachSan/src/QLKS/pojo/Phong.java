@@ -30,11 +30,12 @@ public class Phong implements Serializable {
 
     }
 
-    public Phong(int maPhong, int sucChua, double giaP, int tinhTrangP) {
+    public Phong(int maPhong, int sucChua,LoaiPhong loaiPhong, double giaP, int tinhTrangP) {
         this.maPhong = maPhong;
         this.sucChua = sucChua;
         this.giaP = giaP;
         this.tinhTrangP = tinhTrangP;
+        this.loaiPhong = loaiPhong;
     }
 
     /**
@@ -73,7 +74,9 @@ public class Phong implements Serializable {
     public String getGiaP() {
         return String.format("%2.0f%s", giaP, " VNĐ");
     }
-
+    public double getGiaPhong() {
+        return giaP;
+    }
     /**
      * @param giaP the giaP to set
      */
@@ -90,7 +93,9 @@ public class Phong implements Serializable {
         else
             return "Trống";
     }
-
+    public int getTinhTrangPhong() {
+        return tinhTrangP;
+    }
     /**
      * @param tinhTrangP the tinhTrangP to set
      */
