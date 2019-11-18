@@ -17,7 +17,11 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-
+import static quanlykhachsan.TimKiemPhongController.checkGiaPhong;
+import static quanlykhachsan.TimKiemPhongController.checkLoaiPhong;
+import static quanlykhachsan.TimKiemPhongController.checkMaPhong;
+import static quanlykhachsan.TimKiemPhongController.checkSoNguoi;
+import static quanlykhachsan.TimKiemPhongController.checkTinhTrangPhong;
 
 /**
  *
@@ -39,7 +43,6 @@ public class Utils {
     }
     
     public static void CapNhatKhachHang(KhachHang kh){
-        
         Session session = factory.openSession();
         
         Transaction trans = session.beginTransaction();
@@ -65,7 +68,6 @@ public class Utils {
     public static List<Phong> laydsPhong(String loai, String soN, int check){
         Session session = factory.openSession();
         Criteria cr =session.createCriteria(Phong.class);
-        Alert a = new Alert(Alert.AlertType.INFORMATION);
         int soNguoi = 0;
         Criterion tinhT =  Restrictions.eq("tinhTrangP", check);
         int loaiP = traloaiPhong(loai);
@@ -79,68 +81,42 @@ public class Utils {
         }
         else
             if (loaiP == 0 && "".equals(soN) ){
-            
-           if (cr.add(Restrictions.or(tinhT)).list().isEmpty())
-                    {
-                        a.setTitle("Thông báo ");
-                        switch (check) {
-                            case 0:
-                                a.setContentText(" Hết phòng trống!");
-                                a.show();
-                                break;
-                            case -1:
-                                a = new Alert(Alert.AlertType.ERROR);
-                                a.setTitle("Nhắc nhở ");
-                                a.setContentText(" Bạn cần nhập dữ liệu!");
-                                a.show();
-                                break;
-                           
-                            default:
-                                a.setContentText(" Không có phòng nào đã được đặt!");
-                                a.show();
-                                break;
-                        }
-                    }
-           else 
-                cr.add(Restrictions.or(tinhT));
-        }
-        else 
-            if (!"".equals(soN) && loaiP == 0)
-            {  
-                soNguoi = Integer.parseInt(soN);
-                Criterion nguoi = Restrictions.eq("sucChua", soNguoi);
-                if (check == -1)
-                    cr.add(Restrictions.or(nguoi));
-                else
-                    cr.add(Restrictions.and(nguoi, tinhT));
-                        
-            }else 
-                if ("".equals(soN) && 0 != loaiP ){
-                        Criterion l =  Restrictions.eq("loaiPhong", new LoaiPhong(loaiP, loai));
-                    if (check == -1)
-                        cr.add(Restrictions.or(l));
-                    else
-                        cr.add(Restrictions.and(l, tinhT));
-                }
-                else {
-                    Criterion l =  Restrictions.eq("loaiPhong", new LoaiPhong(loaiP, loai));
+                if (!cr.add(Restrictions.or(tinhT)).list().isEmpty()) 
+                    cr.add(Restrictions.or(tinhT));
+            }
+            else 
+                if (!"".equals(soN) && loaiP == 0)
+                {  
                     soNguoi = Integer.parseInt(soN);
                     Criterion nguoi = Restrictions.eq("sucChua", soNguoi);
                     if (check == -1)
-                        cr.add(Restrictions.and(l, nguoi));
+                        cr.add(Restrictions.or(nguoi));
                     else
-                        cr.add(Restrictions.and(l, tinhT, nguoi));
-                }
+                        cr.add(Restrictions.and(nguoi, tinhT));
+
+                }else 
+                    if ("".equals(soN) && 0 != loaiP ){
+                            Criterion l =  Restrictions.eq("loaiPhong", new LoaiPhong(loaiP, loai));
+                        if (check == -1)
+                            cr.add(Restrictions.or(l));
+                        else
+                            cr.add(Restrictions.and(l, tinhT));
+                    }
+                    else {
+                        Criterion l =  Restrictions.eq("loaiPhong", new LoaiPhong(loaiP, loai));
+                        soNguoi = Integer.parseInt(soN);
+                        Criterion nguoi = Restrictions.eq("sucChua", soNguoi);
+                        if (check == -1)
+                            cr.add(Restrictions.and(l, nguoi));
+                        else
+                            cr.add(Restrictions.and(l, tinhT, nguoi));
+                    }
+        
         
                 
         cr.addOrder(Order.asc("maPhong"));
         List<Phong> phongs = cr.list();
-        if (cr.list().isEmpty() && (check != -1 || check == -2 )&& ("".equals(soN) && loaiP == 0))
-        {
-            a.setTitle("Thông báo ");
-            a.setContentText(" Không tồn tại phòng bạn muốn tìm!");
-            a.show();
-        }
+        
         session.close();
          
         return phongs;

@@ -105,7 +105,7 @@
                   </VBox>
                   <HBox prefHeight="38.0" prefWidth="305.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#timKiemHandler" prefHeight="32.0" prefWidth="125.0" styleClass="search" text="Tìm kiếm">
+                        <Button mnemonicParsing="false" onAction="#timKiemPhongHandler" prefHeight="32.0" prefWidth="125.0" styleClass="search" text="Tìm kiếm">
                            <HBox.margin>
                               <Insets left="20.0" />
                            </HBox.margin></Button>
@@ -153,21 +153,166 @@
                         <Insets bottom="20.0" />
                      </VBox.margin>
                   </Label>
-                  <TableView fx:id="tbKQ" prefHeight="502.0" prefWidth="708.0" style="-fx-background-color: white;">
-                    <columns>
-                        <TableColumn fx:id="tcNumberR" prefWidth="93.0" text="Room Number" />
-                      <TableColumn fx:id="tcType" prefWidth="72.0" text="Room Type" />
-                        <TableColumn fx:id="tcNumberP" prefWidth="113.0" text="Number Of People" />
-                        <TableColumn fx:id="tcPrice" minWidth="0.0" prefWidth="144.0" text="Room Price" />
-                        <TableColumn fx:id="tcStatus" prefWidth="118.0" text="Room Status" />
-                    </columns>
-                  </TableView>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#suaPHandler" prefHeight="32.0" prefWidth="137.0" styleClass="search" text="Cập nhật phòng" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#suaPHandler" prefHeight="32.0" prefWidth="137.0" styleClass="search" text="Xóa phòng" />
+                        <VBox alignment="CENTER" prefHeight="54.0" prefWidth="358.0">
+                           <children>
+                              <Label prefHeight="17.0" prefWidth="300.0" style="-fx-font-weight: bold;" text="Số phòng">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="60.0" right="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <HBox maxWidth="-Infinity" prefHeight="43.0" prefWidth="395.0">
+                                 <children>
+                                    <TextField fx:id="tfMa" prefHeight="25.0" prefWidth="193.0" promptText="Số phòng">
+                                       <HBox.margin>
+                                          <Insets left="60.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="54.0" prefWidth="405.0">
+                           <children>
+                              <Label prefHeight="19.0" prefWidth="276.0" style="-fx-font-weight: bold;" text="Sức chứa">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" right="10.0" />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets left="50.0" />
+                                 </padding>
+                              </Label>
+                              <HBox maxWidth="-Infinity" prefHeight="43.0" prefWidth="395.0">
+                                 <children>
+                                    <TextField fx:id="tfSucChua" prefHeight="25.0" prefWidth="193.0" promptText="Nhập số người">
+                                       <HBox.margin>
+                                          <Insets left="60.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="54.0" prefWidth="270.0">
+                           <children>
+                              <Label prefHeight="19.0" prefWidth="215.0" style="-fx-font-weight: bold;" text="Loại phòng">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" right="10.0" />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets left="20.0" />
+                                 </padding>
+                              </Label>
+                              <HBox maxWidth="-Infinity" prefHeight="25.0" prefWidth="175.0">
+                                 <children>
+                                    <ComboBox fx:id="cbLoai" prefHeight="27.0" prefWidth="255.0" promptText="Chọn loại phòng" style="-fx-border-color: #a2a2a2; -fx-border-width: 0px 0px 2px 0px; -fx-background-color: transparent;" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
                      </children>
                   </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="54.0" prefWidth="547.0">
+                           <children>
+                              <Label prefHeight="19.0" prefWidth="278.0" style="-fx-font-weight: bold;" text="Giá phòng">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets left="50.0" />
+                                 </padding>
+                              </Label>
+                              <HBox maxWidth="-Infinity" prefHeight="43.0" prefWidth="395.0">
+                                 <children>
+                                    <TextField fx:id="tfgia" prefHeight="25.0" prefWidth="193.0" promptText="Nhập giá">
+                                       <HBox.margin>
+                                          <Insets left="60.0" right="10.0" />
+                                       </HBox.margin>
+                                    </TextField>
+                                    <Label text="VNĐ" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="54.0" prefWidth="741.0">
+                           <children>
+                              <Label prefHeight="19.0" prefWidth="429.0" style="-fx-font-weight: bold;" text="Tình trạng phòng">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <HBox maxWidth="-Infinity" prefHeight="25.0" prefWidth="497.0">
+                                 <children>
+                                    <RadioButton fx:id="rdT" mnemonicParsing="false" prefHeight="30.0" prefWidth="200.0" text="Phòng trống">
+                                       <padding>
+                                          <Insets left="30.0" right="20.0" />
+                                       </padding>
+                                    </RadioButton>
+                                    <RadioButton fx:id="rdF" mnemonicParsing="false" prefHeight="30.0" prefWidth="166.0" text="Phòng đã đặt" />
+                                 </children>
+                              </HBox>
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefHeight="45.0" prefWidth="734.0">
+                     <children>
+                        <Button alignment="CENTER" mnemonicParsing="false" onAction="#ThemHandler" prefHeight="25.0" prefWidth="147.0" style="-fx-background-color: #265763;" styleClass="search" text="CREATE">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="btnCapNhat" alignment="CENTER" mnemonicParsing="false" onAction="#CapNhatHandler" prefHeight="25.0" prefWidth="147.0" style="-fx-background-color: #265763;" styleClass="search" text="UPDATE">
+                           <HBox.margin>
+                              <Insets right="20.0" top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="btnXoa" alignment="CENTER" layoutX="177.0" layoutY="30.0" mnemonicParsing="false" onAction="#deleteRowOnTable" prefHeight="25.0" prefWidth="147.0" style="-fx-background-color: #265763;" styleClass="search" text="DELETE">
+                           <HBox.margin>
+                              <Insets top="20.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="40.0" left="50.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <TableView fx:id="tbPhong" prefHeight="502.0" prefWidth="640.0" style="-fx-background-color: white;">
+                    <columns>
+                        <TableColumn fx:id="tcNumberR" prefWidth="129.0" text="Room Number" />
+                      <TableColumn fx:id="tcType" minWidth="0.0" prefWidth="138.0" text="Room Type" />
+                        <TableColumn fx:id="tcNumberP" prefWidth="140.0" text="Number Of People" />
+                        <TableColumn fx:id="tcPrice" minWidth="0.0" prefWidth="127.0" text="Room Price" />
+                        <TableColumn fx:id="tcStatus" minWidth="6.0" prefWidth="139.0" text="Room Status" />
+                    </columns>
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </VBox.margin>
+                  </TableView>
                </children>
             </VBox>
          </children>

@@ -38,25 +38,6 @@ Button.timkiem{
     -fx-background-size: 100% 100%;
     -fx-background-color: #eedecd 
 }
-
-.NhapNguoiDung{
-    
-    -fx-background-image: url("/quanlykhachsan/Images/nai.jpg");
-    -fx-background-size: 100% 100%;
-}
-
-.GiaoDienNhanVien{
-    -fx-background-image: url("/quanlykhachsan/Images/bautroi.jpg");
-    -fx-background-size: 100% 100%;
-}
-/*<<<<<<< HEAD
-button.timkiem1{
-    -fx-background-image: url("/quanlykhachsan/Images/a1.jpg");
-}
-BorderPane.giaodienNV{*/
- 
-    
-/*=======
 Button.search{
     -fx-background-radius: 20;
     -fx-background-color:  #265763;
@@ -65,5 +46,4 @@ Button.search{
 
 TableView TableColumn {
     -fx-text-alignment: center;
->>>>>>> a2bec4ce5a634458e492893d8a16ff04a8038904
-}*/
+}
