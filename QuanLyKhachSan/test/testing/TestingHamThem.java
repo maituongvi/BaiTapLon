@@ -89,8 +89,6 @@ public class TestingHamThem {
     
     @Test 
     public void test1(){
-        
-        
         Assert.assertEquals(this.expected, this.tk.themPhong(ma, soNguoi, loai, gia, t, f));
     }
 

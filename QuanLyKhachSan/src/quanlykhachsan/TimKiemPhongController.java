@@ -141,7 +141,7 @@ public class TimKiemPhongController implements Initializable {
                 this.tfMa.setText(String.format("%d",ph.getMaPhong()));
                 this.tfSucChua.setText(String.format("%d",ph.getSucChua()));
                 this.cbLoai.getSelectionModel().select(ph.getLoaiPhong());
-                this.tfgia.setText(String.format("%.2f",ph.getGiaPhong()));
+                this.tfgia.setText(String.format("%.2f",ph.getGiaP()));
                 
                 if ("Đã đặt".equals(ph.getTinhTrangP()) == true)
                     rdF.setSelected(true);

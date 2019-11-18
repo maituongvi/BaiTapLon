@@ -17,11 +17,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import static quanlykhachsan.TimKiemPhongController.checkGiaPhong;
-import static quanlykhachsan.TimKiemPhongController.checkLoaiPhong;
-import static quanlykhachsan.TimKiemPhongController.checkMaPhong;
-import static quanlykhachsan.TimKiemPhongController.checkSoNguoi;
-import static quanlykhachsan.TimKiemPhongController.checkTinhTrangPhong;
+
 
 /**
  *
@@ -43,6 +39,7 @@ public class Utils {
     }
     
     public static void CapNhatKhachHang(KhachHang kh){
+        
         Session session = factory.openSession();
         
         Transaction trans = session.beginTransaction();
