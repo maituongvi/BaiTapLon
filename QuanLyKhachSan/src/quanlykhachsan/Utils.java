@@ -29,7 +29,9 @@ import static quanlykhachsan.TimKiemPhongController.checkTinhTrangPhong;
  */
 public class Utils {
     public static final SessionFactory factory = HibernateUtil.getSessionFactory();
-    
+    public static String tieuDe = "";
+    public static String noiDung = "";
+    public static int dem = 0;
     public static List<KhachHang> laydsKH(String kw, int limit){
         Session session = factory.openSession();
         Criteria cr =session.createCriteria(KhachHang.class);
@@ -81,42 +83,65 @@ public class Utils {
         }
         else
             if (loaiP == 0 && "".equals(soN) ){
-                if (!cr.add(Restrictions.or(tinhT)).list().isEmpty()) 
-                    cr.add(Restrictions.or(tinhT));
-            }
-            else 
-                if (!"".equals(soN) && loaiP == 0)
-                {  
+            
+           if (cr.add(Restrictions.or(tinhT)).list().isEmpty())
+                    {
+                        tieuDe = "Thông báo ";
+                        switch (check) {
+                            case 0:
+                                noiDung = " Hết phòng trống!";
+                                break;
+                            case -1:
+                                tieuDe = "Nhắc nhở ";
+                                noiDung = " Bạn cần nhập dữ liệu!";
+                                break;
+                           
+                            default:
+                                noiDung = " Không có phòng nào đã được đặt!";
+                                break;
+                        }
+                        dem = -1;
+                    }
+           else 
+                cr.add(Restrictions.or(tinhT));
+        }
+        else 
+            if (!"".equals(soN) && loaiP == 0)
+            {  
+                soNguoi = Integer.parseInt(soN);
+                Criterion nguoi = Restrictions.eq("sucChua", soNguoi);
+                if (check == -1)
+                    cr.add(Restrictions.or(nguoi));
+                else
+                    cr.add(Restrictions.and(nguoi, tinhT));
+                        
+            }else 
+                if ("".equals(soN) && 0 != loaiP ){
+                        Criterion l =  Restrictions.eq("loaiPhong", new LoaiPhong(loaiP, loai));
+                    if (check == -1)
+                        cr.add(Restrictions.or(l));
+                    else
+                        cr.add(Restrictions.and(l, tinhT));
+                    
+                }
+                else {
+                    Criterion l =  Restrictions.eq("loaiPhong", new LoaiPhong(loaiP, loai));
                     soNguoi = Integer.parseInt(soN);
                     Criterion nguoi = Restrictions.eq("sucChua", soNguoi);
                     if (check == -1)
-                        cr.add(Restrictions.or(nguoi));
+                        cr.add(Restrictions.and(l, nguoi));
                     else
-                        cr.add(Restrictions.and(nguoi, tinhT));
-
-                }else 
-                    if ("".equals(soN) && 0 != loaiP ){
-                            Criterion l =  Restrictions.eq("loaiPhong", new LoaiPhong(loaiP, loai));
-                        if (check == -1)
-                            cr.add(Restrictions.or(l));
-                        else
-                            cr.add(Restrictions.and(l, tinhT));
-                    }
-                    else {
-                        Criterion l =  Restrictions.eq("loaiPhong", new LoaiPhong(loaiP, loai));
-                        soNguoi = Integer.parseInt(soN);
-                        Criterion nguoi = Restrictions.eq("sucChua", soNguoi);
-                        if (check == -1)
-                            cr.add(Restrictions.and(l, nguoi));
-                        else
-                            cr.add(Restrictions.and(l, tinhT, nguoi));
-                    }
-        
+                        cr.add(Restrictions.and(l, tinhT, nguoi));
+                }
         
                 
         cr.addOrder(Order.asc("maPhong"));
         List<Phong> phongs = cr.list();
-        
+        if (cr.list().isEmpty() && (dem == 0 || (!"".equals(soN) && loaiP != 0)))
+        {
+            tieuDe = "Thông báo ";
+            noiDung = " Không tồn tại phòng bạn muốn tìm!";
+        }
         session.close();
          
         return phongs;
