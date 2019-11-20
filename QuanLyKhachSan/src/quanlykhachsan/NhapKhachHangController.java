@@ -6,6 +6,7 @@
 package quanlykhachsan;
 
 import QLKS.pojo.KhachHang;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -20,7 +21,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -34,6 +39,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -78,6 +84,7 @@ public class NhapKhachHangController implements Initializable {
     private Button btnCapNhat;
     @FXML
     private Button btnXoa;
+    
     @Override
     
     public void initialize(URL url, ResourceBundle rb) {
@@ -135,6 +142,15 @@ public class NhapKhachHangController implements Initializable {
     }    
     
     public void Them(ActionEvent event){
+        Date ns = Date.from(dateOfBirth.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        
+        if(this.checkNgayHopLe(ns) == false){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Lỗi nhập ");
+            a.setContentText(" Vui lòng chọn ngày hợp lệ.");
+            a.show();
+            return;
+        }
         if(checkNhapTenKhachHang(name.getText()) == false){
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("Lỗi nhập !!! ");
@@ -157,7 +173,7 @@ public class NhapKhachHangController implements Initializable {
         try {
             trans = session.beginTransaction();
             String id = UUID.randomUUID().toString();
-            Date ns = Date.from(dateOfBirth.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            
             KhachHang k1 = new KhachHang(id, name.getText(),  ns,(String)comboBox.getValue() ,phone.getText());
             session.save(k1);
             trans.commit();
@@ -274,6 +290,20 @@ public class NhapKhachHangController implements Initializable {
         this.comboBox.setValue(null);
         this.dateOfBirth.setValue(null);
        
+    }
+    
+    public void troVe(ActionEvent event) throws IOException{
+        Parent login = FXMLLoader.load(getClass().getResource("GiaoDienNhanVien.fxml"));
+        Scene loginScene = new Scene(login);
+
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(loginScene);
+        window.show();
+    }
+    
+    public boolean checkNgayHopLe(Date ngay){
+        Date now = new Date();
+        return ngay.before(now);
     }
     
  

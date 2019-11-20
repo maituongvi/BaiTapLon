@@ -47,3 +47,14 @@ Button.search{
 TableView TableColumn {
     -fx-text-alignment: center;
 }
+
+.NhapNguoiDung{
+    
+    -fx-background-image: url("/quanlykhachsan/Images/nai.jpg");
+    -fx-background-size: 100% 100%;
+}
+
+.GiaoDienNhanVien{
+    -fx-background-image: url("/quanlykhachsan/Images/bautroi.jpg");
+    -fx-background-size: 100% 100%;
+}

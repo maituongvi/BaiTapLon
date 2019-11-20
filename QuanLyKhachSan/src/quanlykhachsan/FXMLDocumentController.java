@@ -21,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.util.List;
+import javafx.scene.control.Alert;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -49,41 +50,87 @@ public class FXMLDocumentController implements Initializable {
       
     } 
     
-    public void dangNhap(ActionEvent event) {
-       SessionFactory factory = HibernateUtil.getSessionFactory();
-        Session session = factory.openSession();
-        Query q = session.createQuery("from TaiKhoan");
-        List<TaiKhoan> rs = q.list();
-
-        rs.forEach(e-> {
-           if(e.getTaiKhoan().equals(taiKhoan.getText())  && e.getMatKhau().equals(matKhau.getText()))
-           {
-                 
-               try {
-                    Parent login = FXMLLoader.load(getClass().getResource("GiaoDienNhanVien.fxml"));
-                    Scene loginScene = new Scene(login);
-
-                    Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    window.setScene(loginScene);
-                    window.show();
-               } catch (IOException ex) {
-                   System.out.println(ex.getMessage());
-               }
-           }
-        });
+    public void dangNhap(ActionEvent event) throws IOException {
+        String tk =taiKhoan.getText();
+        String mk = matKhau.getText();
         
-        session.close();
-    }
-    
-    public void login(ActionEvent event) throws IOException{
-        Parent login = FXMLLoader.load(getClass().getResource("DangNhap.fxml"));
-        Scene loginScene = new Scene(login);
+        if(!tk.isEmpty() && !mk.isEmpty()){
+            if (login(tk, mk)) {
+                Parent login = FXMLLoader.load(getClass().getResource("GiaoDienNhanVien.fxml"));
+                Scene loginScene = new Scene(login);
 
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(loginScene);
-        window.show();
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(loginScene);
+                window.show();
+            }
+            else {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("Lỗi đăng nhập ");
+                a.setContentText("Thông tin tài khoản hoặc mật khẩu không hợp lệ.\nVui lòng kiểm tra lại");
+                a.show();
+            }
+        }
+        else {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Lỗi đăng nhập ");
+            a.setContentText("Vui lòng nhập đầy đủ thông tin.");
+            a.show();
+        }
+            
+        //SessionFactory factory = HibernateUtil.getSessionFactory();
+        //Session session = factory.openSession();
+        //Query q = session.createQuery("from TaiKhoan");
+        //List<TaiKhoan> rs = q.list();
+
+        //rs.forEach(e-> {
+        //   if(e.getTaiKhoan().equals(taiKhoan.getText())  && e.getMatKhau().equals(matKhau.getText()))
+        //   {
+                 
+        //       try {
+        //            Parent login = FXMLLoader.load(getClass().getResource("GiaoDienNhanVien.fxml"));
+        //          Scene loginScene = new Scene(login);
+        //
+        //          Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        //            window.setScene(loginScene);
+        //            window.show();
+        //       } catch (IOException ex) {
+        //           System.out.println(ex.getMessage());
+        //       }
+        //   }
+        //});
+        
+        //session.close();
     }
     
+//    public void login(ActionEvent event) throws IOException{
+//        Parent login = FXMLLoader.load(getClass().getResource("DangNhap.fxml"));
+//        Scene loginScene = new Scene(login);
+//
+//        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+//        window.setScene(loginScene);
+//        window.show();
+//    }
+    public static boolean login(String tk, String mk) {
+        boolean check = false;
+        
+        if (!tk.isEmpty() && !mk.isEmpty()) {
+            SessionFactory factory = HibernateUtil.getSessionFactory();
+            Session session = factory.openSession();
+            Query q = session.createQuery("from TaiKhoan");
+            List<TaiKhoan> rs = q.list();
+            for( TaiKhoan e : rs){
+                if(e.getTaiKhoan().equals(tk)  && e.getMatKhau().equals(mk)){
+                    check = true;
+                }
+            }
+
+            session.close();
+        } else {
+            check = false;
+        }
+        return check;
+    }
+
     
    
     

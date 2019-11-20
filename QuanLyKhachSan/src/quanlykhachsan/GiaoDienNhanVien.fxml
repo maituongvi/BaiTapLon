@@ -15,7 +15,7 @@
          <children>
             <HBox alignment="CENTER" opacity="0.9" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button contentDisplay="TOP" layoutX="443.0" layoutY="222.0" mnemonicParsing="false" style="-fx-background-color: rgb(112,118,218,0.3);" text="Phòng">
+                  <Button contentDisplay="TOP" layoutX="443.0" layoutY="222.0" mnemonicParsing="false" onAction="#phong" style="-fx-background-color: rgb(112,118,218,0.3);" text="Phòng">
                      <graphic>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>

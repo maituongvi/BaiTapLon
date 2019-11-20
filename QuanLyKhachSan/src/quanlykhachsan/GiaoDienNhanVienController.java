@@ -43,4 +43,13 @@ public class GiaoDienNhanVienController implements Initializable {
         window.show();
     }
     
+    public void phong(ActionEvent event) throws IOException{
+        Parent login = FXMLLoader.load(getClass().getResource("TimKiemPhong.fxml"));
+        Scene loginScene = new Scene(login);
+
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(loginScene);
+        window.show();
+    }
+    
 }

@@ -53,6 +53,9 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import static quanlykhachsan.NhapKhachHangController.checkNhapTenKhachHang;
 import static quanlykhachsan.NhapKhachHangController.checkSDT;
+import static quanlykhachsan.Utils.dem;
+import static quanlykhachsan.Utils.noiDung;
+import static quanlykhachsan.Utils.tieuDe;
 import static quanlykhachsan.Utils.traloaiPhong;
 
 /**
@@ -173,15 +176,7 @@ public class TimKiemPhongController implements Initializable {
         String loai = cbLoaiP.getSelectionModel().getSelectedItem();
         int loaiP = traloaiPhong(loai);
         String nguoi = tfSoN.getText();
-        if (!tfSoN.getText().isEmpty() || !"".equals(tfSoN.getText())){
-           if (checkSoNguoi(tfSoN.getText()) == false){
-            a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Chú ý");
-            a.setContentText(" Số phòng là một số nguyên!");
-            a.show();
-            nguoi = "-1";
-            }  
-        }
+        
     
         
         int tinhTrang = -1;
@@ -194,38 +189,72 @@ public class TimKiemPhongController implements Initializable {
                 tinhTrang = -1;
         
         this.tbPhong.getItems().clear();
-         
-        if (!"-1".equals(nguoi)){
+        if  (!tfSoN.getText().isEmpty() && checkSoNguoi(nguoi) == false)
+        {
+            a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Nhắc nhở");
+            a.setContentText(" Nhập sai số người không hợp lệ (số người là số nguyên và nhỏ hơn 10^10!");
+            a.show();
+            
+        }
+        else {
             List<Phong> ph = Utils.laydsPhong(loai, nguoi, tinhTrang);
             this.tbPhong.getItems().addAll(ph);
+            if (tbPhong.getItems().isEmpty())
+                {
+                    
+                    a = new Alert(Alert.AlertType.INFORMATION);
+                    a.setTitle(Utils.tieuDe);
+                    a.setContentText(Utils.noiDung);
+                    a.show();
+                }
+//            if (Utils.dem == -1){
+//                a = new Alert(Alert.AlertType.INFORMATION);
+//                a.setTitle(Utils.tieuDe);
+//                a.setContentText(Utils.tieuDe);
+//                a.show();
+//            }
+            
+            
         }
-        if (tbPhong.getItems().isEmpty())
-                    {
-                        a.setTitle("Thông báo ");
-                        switch (tinhTrang) {
-                            case 0:
-                                a.setContentText(" Hết phòng trống!");
-                                a.show();
-                                break;
-                            case -1:
-                                a = new Alert(Alert.AlertType.ERROR);
-                                a.setTitle("Nhắc nhở ");
-                                a.setContentText(" Bạn cần nhập dữ liệu!");
-                                a.show();
-                                break;
-                           
-                            default:
-                                a.setContentText(" Không có phòng nào đã được đặt!");
-                                a.show();
-                                break;
-                        }
-                    }
-        if (tbPhong.getItems().isEmpty() && (tinhTrang != -1 || tinhTrang == -2 )&& ("".equals(nguoi) && loaiP == 0))
-        {
-            a.setTitle("Thông báo ");
-            a.setContentText(" Không tồn tại phòng bạn muốn tìm!");
-            a.show();
-        }
+        
+        
+        
+
+         
+        
+//        if (tbPhong.getItems().isEmpty())
+//                    {
+//                        a.setTitle("Thông báo ");
+//                        switch (tinhTrang) {
+//                            case 0:
+//                                a.setContentText(" Hết phòng trống!");
+//                                a.show();
+//                                break;
+//                            case 1:
+//                                a.setContentText(" Chưa có phòng đã đặt!");
+//                                a.show();
+//                                break;
+//                            case -1:
+//                                a = new Alert(Alert.AlertType.ERROR);
+//                                a.setTitle("Nhắc nhở ");
+//                                a.setContentText(" Bạn cần nhập dữ liệu!");
+//                                a.show();
+//                                break;
+//                           
+//                            default:
+//                                a.setContentText(" Không có phòng nào đã được đặt!");
+//                                a.show();
+//                                break;
+//                        }
+//                    }
+//       
+//        if (tbPhong.getItems().isEmpty() && (tinhTrang != -1 || tinhTrang == -2 )&& ("".equals(nguoi) && loaiP == 0))
+//        {
+//            a.setTitle("Thông báo ");
+//            a.setContentText(" Không tồn tại phòng bạn muốn tìm!");
+//            a.show();
+//        }
         
     }
     
@@ -307,7 +336,7 @@ public class TimKiemPhongController implements Initializable {
 //               a.setTitle("Kết quả ");
 //               a.setContentText(" Thêm khách hàng thành công");
 //               a.show();
-               content = " Thêm khách hàng thành công";
+               content = " Thêm phòng thành công";
                check = true;
                loadAllPhong("", "", -2);
             } catch (Exception e) {
@@ -317,7 +346,7 @@ public class TimKiemPhongController implements Initializable {
  //               a.setTitle("Kết quả ");
  //               a.setContentText(" Thêm khách hàng thất bại");
  //               a.show();
-                 content = " Thêm khách hàng thất bại";
+                 content = " Thêm phòng thất bại";
                 check = false;
             } finally{
                 session.close();
@@ -343,7 +372,7 @@ public class TimKiemPhongController implements Initializable {
             loadAllPhong("", "", -2);
             Alert a = new Alert(Alert.AlertType.INFORMATION);
             a.setTitle("Thông báo");
-            a.setContentText("Cập nhật khách hàng thành công.");
+            a.setContentText("Cập nhật phòng thành công.");
             a.show(); 
         }
         else
@@ -382,7 +411,7 @@ public class TimKiemPhongController implements Initializable {
                 ph.setTinhTrangP(tinhTP);
                 ph.setLoaiPhong(new LoaiPhong(loaiP, loai));
                 Utils.CapNhatPhong(ph);
-                content = "Cập nhật khách hàng thành công.";
+                content = "Cập nhật phòng thành công.";
                 
             }
                
@@ -402,7 +431,7 @@ public class TimKiemPhongController implements Initializable {
                 if(rs == ButtonType.OK){
                     Phong ph = this.tbPhong.getSelectionModel().getSelectedItem();
                     Utils.xoaPhong(ph);
-                loadAllPhong("", "", -2);
+                    loadAllPhong("", "", -2);
                 }
                
             });
@@ -470,7 +499,6 @@ public class TimKiemPhongController implements Initializable {
     // hàm kiểm tra nhập loại
     public static boolean checkLoaiPhong(String s){
         boolean check = false;
-        s = s.toUpperCase();
         if("A".equals(s) || "B".equals(s) || "C".equals(s) || "D".equals(s)) {
             check = true;
         }
@@ -495,7 +523,7 @@ public class TimKiemPhongController implements Initializable {
 //            a.setTitle("Lỗi nhập !!! ");
 //            a.setContentText(" Vui lòng nhập lại mã hợp lệ.");
 //            a.show();
-//            checkNhap = " Vui lòng nhập lại số phòng hợp lệ. ";
+            checkNhap = " Vui lòng nhập lại số phòng hợp lệ. ";
             check = false;
         }else
              if(checkSoNguoi(soNguoi) == false){
@@ -503,7 +531,7 @@ public class TimKiemPhongController implements Initializable {
 //                a.setTitle("Lỗi nhập !!! ");
 //                a.setContentText(" Vui lòng nhập lại số người hợp lệ. VD:2 ");
 //                a.show();
-//                checkNhap = " Vui lòng nhập lại số người hợp lệ. VD:2 ";
+                checkNhap = " Vui lòng nhập lại số người hợp lệ và không bỏ trống. VD:2 ";
                 check = false;
             } else
                  if(checkLoaiPhong(loai) == false){
@@ -511,7 +539,7 @@ public class TimKiemPhongController implements Initializable {
 //                    a.setTitle("Lỗi nhập !!! ");
 //                    a.setContentText(" Vui lòng chọn loại phòng hợp lệ.");
 //                    a.show();
-                    checkNhap = " Vui lòng chọn loại phòng hợp lệ. ";
+                    checkNhap = " Vui lòng chọn loại phòng hợp lệ và không bỏ trống. ";
                     check = false;
                 }else
                      if(checkGiaPhong(gia) == false){
@@ -519,7 +547,7 @@ public class TimKiemPhongController implements Initializable {
 //                    a.setTitle("Lỗi nhập !!! ");
 //                    a.setContentText(" Vui lòng chọn loại phòng hợp lệ.");
 //                    a.show();
-                    checkNhap = " Vui lòng nhập giá phòng hợp lệ. VD 1500000";
+                    checkNhap = " Vui lòng nhập giá phòng hợp lệ và không bỏ trống. VD 1500000";
                     check = false;
                     } else
                          if(checkTinhTrangPhong(t, f) == false){
