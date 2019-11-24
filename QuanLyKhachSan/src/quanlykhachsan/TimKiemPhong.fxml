@@ -202,7 +202,7 @@
                         </VBox>
                         <VBox alignment="CENTER" prefHeight="54.0" prefWidth="270.0">
                            <children>
-                              <Label prefHeight="19.0" prefWidth="215.0" style="-fx-font-weight: bold;" text="Loại phòng">
+                              <Label prefHeight="19.0" prefWidth="199.0" style="-fx-font-weight: bold;" text="Loại phòng">
                                  <font>
                                     <Font size="13.0" />
                                  </font>
@@ -226,7 +226,7 @@
                      <children>
                         <VBox alignment="CENTER" prefHeight="54.0" prefWidth="547.0">
                            <children>
-                              <Label prefHeight="19.0" prefWidth="278.0" style="-fx-font-weight: bold;" text="Giá phòng">
+                              <Label prefHeight="19.0" prefWidth="325.0" style="-fx-font-weight: bold;" text="Giá phòng">
                                  <font>
                                     <Font size="13.0" />
                                  </font>

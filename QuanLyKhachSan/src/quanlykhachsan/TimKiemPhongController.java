@@ -441,7 +441,7 @@ public class TimKiemPhongController implements Initializable {
     
     //Quay về trang chủ
     public void trangChuHandler(ActionEvent event) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("TrangChu.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("GiaoDienNhanVien.fxml"));
         
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

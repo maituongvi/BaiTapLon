@@ -7,6 +7,7 @@ package quanlykhachsan;
 
 import QLKS.pojo.KhachHang;
 import QLKS.pojo.LoaiPhong;
+import QLKS.pojo.NhanVien;
 import QLKS.pojo.Phong;
 import java.util.List;
 import javafx.scene.control.Alert;
@@ -188,5 +189,18 @@ public class Utils {
         return loaiP;
     }
     
+    // NhanVien
+    // lấy danh sách nhân viên
+    public static List<NhanVien> laydsNV(String kw, int limit){
+        Session session = factory.openSession();
+        Criteria cr =session.createCriteria(NhanVien.class);
+        
+        if(!kw.isEmpty()){
+            cr.add(Restrictions.ilike("tenNV", String.format("%%%s%%", kw)));
+        }
+        List<NhanVien> nv =cr.list();
+        session.close();
+        return nv;
+    }
     
 }

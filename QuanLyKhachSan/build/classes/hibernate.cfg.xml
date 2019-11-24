@@ -46,7 +46,5 @@ Contributor(s):
     <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/qlkhachsan</property>
     <property name="hibernate.connection.username">root</property>
     <property name="hibernate.connection.password">Maituongvi1</property>
-    <mapping class="QLKS.pojo.Phong"/>
-    <mapping class="QLKS.pojo.LoaiPhong"/>
   </session-factory>
 </hibernate-configuration>

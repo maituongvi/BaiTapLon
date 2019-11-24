@@ -54,13 +54,13 @@ DROP TABLE IF EXISTS `hoadon`;
 CREATE TABLE `hoadon` (
   `maHD` int(11) NOT NULL,
   `maNV` int(11) DEFAULT NULL,
-  `maKH` int(11) DEFAULT NULL,
+  `maKH` varchar(45) DEFAULT NULL,
   `ngayDat` datetime DEFAULT NULL,
   `tongTien` double DEFAULT NULL,
   PRIMARY KEY (`maHD`),
   KEY `fk_maNV_idx` (`maNV`),
-  KEY `K_maKH_idx` (`maKH`),
-  CONSTRAINT `K_maKH` FOREIGN KEY (`maKH`) REFERENCES `khachhang` (`maKH`),
+  KEY `fk_maKH_idx` (`maKH`),
+  CONSTRAINT `fk_maKH` FOREIGN KEY (`maKH`) REFERENCES `khachhang` (`maKH`),
   CONSTRAINT `fk_maNV` FOREIGN KEY (`maNV`) REFERENCES `nhanvien` (`idnhanVien`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -82,9 +82,9 @@ DROP TABLE IF EXISTS `khachhang`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `khachhang` (
-  `maKH` int(11) NOT NULL,
+  `maKH` varchar(45) NOT NULL,
   `tenKH` varchar(50) DEFAULT NULL,
-  `ngaySinh` datetime DEFAULT NULL,
+  `ngaySinh` date DEFAULT NULL,
   `gioiTinh` varchar(45) DEFAULT NULL,
   `sdt` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`maKH`)
@@ -97,6 +97,7 @@ CREATE TABLE `khachhang` (
 
 LOCK TABLES `khachhang` WRITE;
 /*!40000 ALTER TABLE `khachhang` DISABLE KEYS */;
+INSERT INTO `khachhang` VALUES ('3e333e16-fa57-4cdf-b3bc-ef47b31afa68','Mai Tường Vi','1999-06-18','Nữ','0356847078'),('fb9069b7-7a9b-4bcb-9014-1b8aaea563b3','Nhung','2019-10-31','Nữ','0123456788');
 /*!40000 ALTER TABLE `khachhang` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -120,6 +121,7 @@ CREATE TABLE `loaiphong` (
 
 LOCK TABLES `loaiphong` WRITE;
 /*!40000 ALTER TABLE `loaiphong` DISABLE KEYS */;
+INSERT INTO `loaiphong` VALUES (1,'A'),(2,'B'),(3,'C'),(4,'D');
 /*!40000 ALTER TABLE `loaiphong` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -178,6 +180,7 @@ CREATE TABLE `phong` (
 
 LOCK TABLES `phong` WRITE;
 /*!40000 ALTER TABLE `phong` DISABLE KEYS */;
+INSERT INTO `phong` VALUES (1,2,1,1500000,0),(2,1,2,2000000,0),(3,4,4,3000000,1),(4,2,3,2500000,0),(5,4,1,1500000,1),(6,2,1,1050000,0),(7,1,2,10000000,0),(8,1,1,3500000,1),(9,4,2,1500000,0),(10,4,2,30000000,0),(130000,2,1,123457,1);
 /*!40000 ALTER TABLE `phong` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -216,4 +219,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-11-03 10:02:56
+-- Dump completed on 2019-11-20 22:44:22
