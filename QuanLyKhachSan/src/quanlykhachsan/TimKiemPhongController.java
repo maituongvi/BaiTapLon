@@ -51,12 +51,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import static quanlykhachsan.NhapKhachHangController.checkNhapTenKhachHang;
 import static quanlykhachsan.NhapKhachHangController.checkSDT;
 import static quanlykhachsan.Utils.dem;
 import static quanlykhachsan.Utils.noiDung;
 import static quanlykhachsan.Utils.tieuDe;
 import static quanlykhachsan.Utils.traloaiPhong;
+import static quanlykhachsan.NhapKhachHangController.checkNhapTen;
 
 /**
  * FXML Controller class

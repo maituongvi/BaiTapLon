@@ -52,4 +52,14 @@ public class GiaoDienNhanVienController implements Initializable {
         window.show();
     }
     
+    // load giao dien nhân viên
+    public void nhanVien(ActionEvent event) throws IOException{
+        Parent login = FXMLLoader.load(getClass().getResource("ThongTinNhanVien.fxml"));
+        Scene loginScene = new Scene(login);
+
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(loginScene);
+        window.show();
+    }
+    
 }

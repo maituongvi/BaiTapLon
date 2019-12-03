@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -24,7 +25,7 @@ public class QuanLyKhachSan extends Application {
         
         Scene scene = new Scene(root);
         stage.setTitle("Quản lý khách sạn");
-         
+        stage.getIcons().add(new Image("/quanlykhachsan/Images/hotel.png"));
         stage.setScene(scene);
         stage.show();
         stage.setResizable(false);

@@ -151,7 +151,7 @@ public class NhapKhachHangController implements Initializable {
             a.show();
             return;
         }
-        if(checkNhapTenKhachHang(name.getText()) == false){
+        if(checkNhapTen(name.getText()) == false){
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("Lỗi nhập !!! ");
             a.setContentText(" Vui lòng nhập lại tên hợp lệ.");
@@ -218,7 +218,7 @@ public class NhapKhachHangController implements Initializable {
             a.show();
             return;
         }
-        if(checkNhapTenKhachHang(name.getText()) == false){
+        if(checkNhapTen(name.getText()) == false){
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("Lỗi nhập !!! ");
             a.setContentText(" Vui lòng nhập lại tên hợp lệ.");
@@ -263,7 +263,7 @@ public class NhapKhachHangController implements Initializable {
     }
     
     // hàm kiểm tra nhập trên khách hàng hợp lệ
-    public static boolean checkNhapTenKhachHang(String s){
+    public static boolean checkNhapTen(String s){
         boolean check = false;
         Pattern pattern = Pattern.compile("^[a-zA-z\\s\\p{L}]{3,40}$");
         Matcher mat = pattern.matcher(s);
@@ -301,7 +301,7 @@ public class NhapKhachHangController implements Initializable {
         window.show();
     }
     
-    public boolean checkNgayHopLe(Date ngay){
+    public static boolean checkNgayHopLe(Date ngay){
         Date now = new Date();
         return ngay.before(now);
     }

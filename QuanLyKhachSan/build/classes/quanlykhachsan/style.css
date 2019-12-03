@@ -1,13 +1,13 @@
 
 .TimKiem{
     
-    -fx-background-image: url("/quanlykhachsan/Images/nai.jpg");
+    -fx-background-image: url("/quanlykhachsan/Images/bautroi.jpg");
     -fx-background-size: 100% 100%;
 }
 .body{
     -fx-background-image: url("/quanlykhachsan/Images/a1.jpg");
     -fx-background-size: 100% 100%;
-    -fx-background-color: #eedecd  
+    -fx-background-color: #eedecd 
 }
 text.createAccount{
     -fx-background-color:  #265763;
@@ -50,11 +50,16 @@ TableView TableColumn {
 
 .NhapNguoiDung{
     
-    -fx-background-image: url("/quanlykhachsan/Images/nai.jpg");
+    -fx-background-image: url("/quanlykhachsan/Images/bautroi.jpg");
     -fx-background-size: 100% 100%;
 }
 
 .GiaoDienNhanVien{
+    -fx-background-image: url("/quanlykhachsan/Images/bautroi.jpg");
+    -fx-background-size: 100% 100%;
+}
+
+.ThongTinNhanVien{
     -fx-background-image: url("/quanlykhachsan/Images/bautroi.jpg");
     -fx-background-size: 100% 100%;
 }

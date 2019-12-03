@@ -203,4 +203,25 @@ public class Utils {
         return nv;
     }
     
+    //thêm hoặc cập nhật nhân viên
+    public static void CapNhatNhanVien(NhanVien nv){
+        Session session = factory.openSession();
+        
+        Transaction trans = session.beginTransaction();
+        session.saveOrUpdate(nv);
+        trans.commit();
+        
+        session.close();
+    }
+    
+    // xóa nhân viên
+    public static void xoaNhanVien(NhanVien nv){
+        Session session = factory.openSession();
+        
+        Transaction trans = session.beginTransaction();
+        session.delete(nv);
+        trans.commit();
+        
+        session.close();
+    }
 }

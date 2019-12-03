@@ -20,7 +20,7 @@ public class TestNhapHoTen {
     public void test(){
         hoTen ="Mai Tường Vi ";
         
-        boolean actual = NhapKhachHangController.checkNhapTenKhachHang(hoTen);
+        boolean actual = NhapKhachHangController.checkNhapTen(hoTen);
         System.out.println(actual);
         boolean expected = true;
         Assert.assertEquals(expected, actual);
@@ -31,9 +31,9 @@ public class TestNhapHoTen {
     public void test1(){
         hoTen ="Mai Tường Vi1 ";
         
-        boolean actual = NhapKhachHangController.checkNhapTenKhachHang(hoTen);
+        boolean actual = NhapKhachHangController.checkNhapTen(hoTen);
         System.out.println(actual);
-        boolean expected = true;
+        boolean expected = false;
         Assert.assertEquals(expected, actual);
     }
     
@@ -42,9 +42,9 @@ public class TestNhapHoTen {
     public void test2(){
         hoTen ="Mai Tường Vi %#@";
         
-        boolean actual = NhapKhachHangController.checkNhapTenKhachHang(hoTen);
+        boolean actual = NhapKhachHangController.checkNhapTen(hoTen);
         System.out.println(actual);
-        boolean expected = true;
+        boolean expected = false;
         Assert.assertEquals(expected, actual);
     }
 }

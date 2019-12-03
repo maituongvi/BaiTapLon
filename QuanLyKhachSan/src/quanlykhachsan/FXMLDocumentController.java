@@ -26,6 +26,7 @@ import javafx.scene.control.Alert;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.hql.internal.ast.tree.Statement;
 import quanlykhachsan.HibernateUtil;
 
 
@@ -116,13 +117,25 @@ public class FXMLDocumentController implements Initializable {
         if (!tk.isEmpty() && !mk.isEmpty()) {
             SessionFactory factory = HibernateUtil.getSessionFactory();
             Session session = factory.openSession();
-            Query q = session.createQuery("from TaiKhoan");
-            List<TaiKhoan> rs = q.list();
-            for( TaiKhoan e : rs){
-                if(e.getTaiKhoan().equals(tk)  && e.getMatKhau().equals(mk)){
+            
+            Query q = session.createQuery("FROM TaiKhoan a WHERE a.taiKhoan = :loc");
+            q.setParameter("loc",tk );
+            List<TaiKhoan> ds = q.list();
+            
+            if(!ds.isEmpty()){
+                for(TaiKhoan e: ds)
+                    if(e.getTaiKhoan().equals(tk)  && e.getMatKhau().equals(mk)){
                     check = true;
                 }
             }
+            else check = false;
+//            Query q = session.createQuery("from TaiKhoan");
+//             List<TaiKhoan> rs = q.list();
+//            for( TaiKhoan e : rs){
+//                if(e.getTaiKhoan().equals(tk)  && e.getMatKhau().equals(mk)){
+//                    check = true;
+//                }
+//            }
 
             session.close();
         } else {

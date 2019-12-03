@@ -33,7 +33,7 @@ public class TestNhapSDT {
         
         boolean actual = NhapKhachHangController.checkSDT(sdt);
         System.out.println(actual);
-        boolean expected = true;
+        boolean expected = false;
         Assert.assertEquals(expected, actual);
     }
     
@@ -44,7 +44,7 @@ public class TestNhapSDT {
         
         boolean actual = NhapKhachHangController.checkSDT(sdt);
         System.out.println(actual);
-        boolean expected = true;
+        boolean expected = false;
         Assert.assertEquals(expected, actual);
     }
     
@@ -55,7 +55,7 @@ public class TestNhapSDT {
         
         boolean actual = NhapKhachHangController.checkSDT(sdt);
         System.out.println(actual);
-        boolean expected = true;
+        boolean expected = false;
         Assert.assertEquals(expected, actual);
     }
     
@@ -66,7 +66,7 @@ public class TestNhapSDT {
         
         boolean actual = NhapKhachHangController.checkSDT(sdt);
         System.out.println(actual);
-        boolean expected = true;
+        boolean expected = false;
         Assert.assertEquals(expected, actual);
     }
     

@@ -39,7 +39,28 @@ public class NhanVien implements Serializable {
     public NhanVien(){
         
     }
+    public NhanVien(int id,String ho, String ten, String queQuan, Date ns, Date nvl, String gioiTinh, String chucVu){
+        this.hoNV =ho;
+        this.tenNV = ten;
+        this.gioiTinh = gioiTinh;
+        this.queQuan = queQuan;
+        this.ngaySinh =ns;
+        this.ngayVaoLam= nvl;
+        this.chucVu =chucVu;
+        this.idnhanVien =id;
+
+    }
     
+    public NhanVien( String ho, String ten, String queQuan, Date ns, Date nvl, String gioiTinh, String chucVu){
+        this.hoNV =ho;
+        this.tenNV = ten;
+        this.gioiTinh = gioiTinh;
+        this.queQuan = queQuan;
+        this.ngaySinh =ns;
+        this.ngayVaoLam= nvl;
+        this.chucVu =chucVu;
+
+    }
 
     /**
      * @return the idnhanVien

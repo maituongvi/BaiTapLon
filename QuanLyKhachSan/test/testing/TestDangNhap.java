@@ -56,7 +56,7 @@ public class TestDangNhap {
     
     @Test // mật khẩu không đúng
     public void test3(){
-        tk = "maituongvi";
+        tk = "maituongvi  ";
         mk ="12";
         boolean expected=false;
         boolean actual = FXMLDocumentController.login(tk, mk);
