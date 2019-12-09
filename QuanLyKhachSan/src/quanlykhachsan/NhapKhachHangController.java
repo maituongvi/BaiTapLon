@@ -6,7 +6,6 @@
 package quanlykhachsan;
 
 import QLKS.pojo.KhachHang;
-import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -21,11 +20,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -39,7 +34,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -84,7 +78,6 @@ public class NhapKhachHangController implements Initializable {
     private Button btnCapNhat;
     @FXML
     private Button btnXoa;
-    
     @Override
     
     public void initialize(URL url, ResourceBundle rb) {
@@ -123,57 +116,17 @@ public class NhapKhachHangController implements Initializable {
             return row;
         });
         
-        btnXoa.setOnAction(et->{
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setContentText("Bạn chắc chưa?");
-            alert.showAndWait().ifPresent(rs ->{
-                if(rs == ButtonType.OK){
-                    KhachHang kh = this.tbKhachHang.getSelectionModel().getSelectedItem();
-                    Utils.xoaKhachHang(kh);
-                    
-                }
-            reloadTableView(Utils.laydsKH("", 0));
-            this.cleanBangNhapThongTinKH();
-               
-            });
-                
-        });
-        
     }    
     
     public void Them(ActionEvent event){
-        Date ns = Date.from(dateOfBirth.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        
-        if(this.checkNgayHopLe(ns) == false){
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Lỗi nhập ");
-            a.setContentText(" Vui lòng chọn ngày hợp lệ.");
-            a.show();
-            return;
-        }
-        if(checkNhapTen(name.getText()) == false){
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Lỗi nhập !!! ");
-            a.setContentText(" Vui lòng nhập lại tên hợp lệ.");
-            a.show();
-            return;
-        }
-        
-        
-        if(checkSDT(phone.getText()) == false){
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Lỗi nhập !!! ");
-            a.setContentText(" Vui lòng nhập lại số điện thoại hợp lệ. VD:0356847078");
-            a.show();
-            return;
-        }
+        this.kiemTraNhapHopLe();
         Session session = factory.openSession();
         Transaction trans =null;
         
         try {
             trans = session.beginTransaction();
             String id = UUID.randomUUID().toString();
-            
+            Date ns = Date.from(dateOfBirth.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
             KhachHang k1 = new KhachHang(id, name.getText(),  ns,(String)comboBox.getValue() ,phone.getText());
             session.save(k1);
             trans.commit();
@@ -183,7 +136,6 @@ public class NhapKhachHangController implements Initializable {
             a.setTitle("Kết quả ");
             a.setContentText(" Thêm khách hàng thành công");
             a.show();
-            this.cleanBangNhapThongTinKH();
             reloadTableView(Utils.laydsKH("", 0));
         } catch (Exception e) {
             if (trans == null)
@@ -218,22 +170,6 @@ public class NhapKhachHangController implements Initializable {
             a.show();
             return;
         }
-        if(checkNhapTen(name.getText()) == false){
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Lỗi nhập !!! ");
-            a.setContentText(" Vui lòng nhập lại tên hợp lệ.");
-            a.show();
-            return;
-        }
-        
-        
-        if(checkSDT(phone.getText()) == false){
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("Lỗi nhập !!! ");
-            a.setContentText(" Vui lòng nhập lại số điện thoại hợp lệ. VD:0356847078");
-            a.show();
-            return;
-        }
         kh.setTenKH(this.name.getText());
         kh.setGioiTinh((String) comboBox.getValue());
         kh.setNgaySinh(Date.from(this.dateOfBirth.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -244,7 +180,6 @@ public class NhapKhachHangController implements Initializable {
         a.setTitle("Thông báo");
         a.setContentText("Cập nhật khách hàng thành công.");
         a.show();
-        this.cleanBangNhapThongTinKH();
         
         reloadTableView(Utils.laydsKH("", 0));
     }
@@ -263,7 +198,7 @@ public class NhapKhachHangController implements Initializable {
     }
     
     // hàm kiểm tra nhập trên khách hàng hợp lệ
-    public static boolean checkNhapTen(String s){
+    public static boolean checkNhapTenKhachHang(String s){
         boolean check = false;
         Pattern pattern = Pattern.compile("^[a-zA-z\\s\\p{L}]{3,40}$");
         Matcher mat = pattern.matcher(s);
@@ -272,6 +207,25 @@ public class NhapKhachHangController implements Initializable {
         }
         return check;
     }
+    
+    
+    
+    public void deleteRowOnTable(ActionEvent event){
+        btnXoa.setOnAction(et->{
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setContentText("Bạn chắc chưa?");
+            alert.showAndWait().ifPresent(rs ->{
+                if(rs == ButtonType.OK){
+                    KhachHang kh = this.tbKhachHang.getSelectionModel().getSelectedItem();
+                    Utils.xoaKhachHang(kh);
+                    reloadTableView(Utils.laydsKH("", 0));
+                }
+               
+            });
+                
+        });
+    }
+    
     
     private void reloadTableView(List<KhachHang> khachHang) {
         this.tbKhachHang.getItems().clear();
@@ -282,28 +236,24 @@ public class NhapKhachHangController implements Initializable {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-   
-    
-    public void cleanBangNhapThongTinKH(){
-        this.name.setText("");
-        this.phone.setText("");
-        this.comboBox.setValue(null);
-        this.dateOfBirth.setValue(null);
+    public void kiemTraNhapHopLe(){
+        if(checkNhapTenKhachHang(name.getText()) == false){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Lỗi nhập !!! ");
+            a.setContentText(" Vui lòng nhập lại tên hợp lệ.");
+            a.show();
+            return;
+        }
+        
+        
+        if(checkSDT(phone.getText()) == false){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Lỗi nhập !!! ");
+            a.setContentText(" Vui lòng nhập lại số điện thoại hợp lệ. VD:0356847078");
+            a.show();
+            return;
+        }
        
-    }
-    
-    public void troVe(ActionEvent event) throws IOException{
-        Parent login = FXMLLoader.load(getClass().getResource("GiaoDienNhanVien.fxml"));
-        Scene loginScene = new Scene(login);
-
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(loginScene);
-        window.show();
-    }
-    
-    public static boolean checkNgayHopLe(Date ngay){
-        Date now = new Date();
-        return ngay.before(now);
     }
     
  
