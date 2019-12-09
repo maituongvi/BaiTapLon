@@ -5,12 +5,18 @@
  */
 package quanlykhachsan;
 
+import QLKS.pojo.HoaDon;
 import QLKS.pojo.KhachHang;
 import QLKS.pojo.LoaiPhong;
 import QLKS.pojo.NhanVien;
 import QLKS.pojo.Phong;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -18,11 +24,6 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-import static quanlykhachsan.TimKiemPhongController.checkGiaPhong;
-import static quanlykhachsan.TimKiemPhongController.checkLoaiPhong;
-import static quanlykhachsan.TimKiemPhongController.checkMaPhong;
-import static quanlykhachsan.TimKiemPhongController.checkSoNguoi;
-import static quanlykhachsan.TimKiemPhongController.checkTinhTrangPhong;
 
 /**
  *
@@ -33,6 +34,10 @@ public class Utils {
     public static String tieuDe = "";
     public static String noiDung = "";
     public static int dem = 0;
+    public static String content = "";
+    public static String checkNhap = "";
+    public static Phong ph;
+    public static NhanVien nv;
     public static List<KhachHang> laydsKH(String kw, int limit){
         Session session = factory.openSession();
         Criteria cr =session.createCriteria(KhachHang.class);
@@ -110,7 +115,7 @@ public class Utils {
             if (!"".equals(soN) && loaiP == 0)
             {  
                 soNguoi = Integer.parseInt(soN);
-                Criterion nguoi = Restrictions.eq("sucChua", soNguoi);
+                Criterion nguoi = Restrictions.gt("sucChua", soNguoi);
                 if (check == -1)
                     cr.add(Restrictions.or(nguoi));
                 else
@@ -128,7 +133,7 @@ public class Utils {
                 else {
                     Criterion l =  Restrictions.eq("loaiPhong", new LoaiPhong(loaiP, loai));
                     soNguoi = Integer.parseInt(soN);
-                    Criterion nguoi = Restrictions.eq("sucChua", soNguoi);
+                    Criterion nguoi = Restrictions.gt("sucChua", soNguoi);
                     if (check == -1)
                         cr.add(Restrictions.and(l, nguoi));
                     else
@@ -168,6 +173,44 @@ public class Utils {
         session.close();
     }
     
+    
+    public static List<KhachHang> laydsKHBangSDT(String kw, int limit){
+        Session session = factory.openSession();
+        Criteria cr =session.createCriteria(KhachHang.class);
+        
+        if(!kw.isEmpty()){
+            cr.add(Restrictions.ilike("sdt", kw));
+        }
+        List<KhachHang> kh =cr.list();
+        session.close();
+        return kh;
+    }
+    
+    public static List<NhanVien> laydsNV(String kw, int limit){
+        Session session = factory.openSession();
+        Criteria cr =session.createCriteria(NhanVien.class);
+        
+        if(!kw.isEmpty()){
+            cr.add(Restrictions.eq("idnhanVien", Integer.parseInt(kw)));
+        }
+        List<NhanVien> nv =cr.list();
+        session.close();
+        return nv;
+    }
+    
+    
+    public static List<HoaDon> laydsHD(KhachHang kh, NhanVien nv){
+        Session session = factory.openSession();
+        Criteria cr =session.createCriteria(NhanVien.class);
+        
+        if(kh != null){
+            cr.add(Restrictions.and(Restrictions.eq("kh", kh),Restrictions.eq("nv", nv)));
+        }
+        List<HoaDon> hd =cr.list();
+        session.close();
+        return hd;
+    }
+    
     public static int traloaiPhong(String loai){
          int loaiP = 0;
         if (loai != null){
@@ -189,39 +232,171 @@ public class Utils {
         return loaiP;
     }
     
-    // NhanVien
-    // lấy danh sách nhân viên
-    public static List<NhanVien> laydsNV(String kw, int limit){
-        Session session = factory.openSession();
-        Criteria cr =session.createCriteria(NhanVien.class);
-        
-        if(!kw.isEmpty()){
-            cr.add(Restrictions.ilike("tenNV", String.format("%%%s%%", kw)));
+    
+     //check ngay
+    public static boolean checkNgayHopLe(Date ngay){
+        Date now = new Date();
+        return ngay.before(now);
+    }
+    
+    
+     //check ngay start
+    public static boolean checkNgayStart(Date ngayStart, Date ngayEnd){
+        boolean check = true;
+        if (Utils.checkNgayHopLe(ngayStart) == true || Utils.checkNgayHopLe(ngayEnd) == true){
+            check = false;
+            noiDung = " Bạn cần nhập ngày hợp lệ";
         }
-        List<NhanVien> nv =cr.list();
-        session.close();
-        return nv;
+        else{
+            check = ngayStart.before(ngayEnd);
+            if (check == false)
+                noiDung = " Ngày trả phòng phải sau ngày bắt đầu! ";
+        }
+            
+        return check;
+    }
+    // hàm kiểm tra nhập số người hợp lệ
+    public static boolean checkSoNguoi(String s){
+        boolean check = false;
+        Pattern pattern = Pattern.compile("^\\d{1,9}$");
+        Matcher mat = pattern.matcher(s);
+        if(mat.find()){
+            check = true;
+        }
+        return check;
     }
     
-    //thêm hoặc cập nhật nhân viên
-    public static void CapNhatNhanVien(NhanVien nv){
-        Session session = factory.openSession();
-        
-        Transaction trans = session.beginTransaction();
-        session.saveOrUpdate(nv);
-        trans.commit();
-        
-        session.close();
+    // hàm kiểm tra nhập số mã nhân viên hợp lệ
+    public static boolean checkMaNV(String s){
+        boolean check = false;
+        Pattern pattern = Pattern.compile("^\\d{1,11}$");
+        Matcher mat = pattern.matcher(s);
+        if(mat.find()){
+            check = true;
+        }
+        return check;
     }
     
-    // xóa nhân viên
-    public static void xoaNhanVien(NhanVien nv){
-        Session session = factory.openSession();
+    // hàm kiểm tra nhập số mã phòng
+    public static boolean checkMaPhong(String s){
+        boolean check = false;
         
-        Transaction trans = session.beginTransaction();
-        session.delete(nv);
-        trans.commit();
-        
-        session.close();
+        Pattern pattern = Pattern.compile("^\\d{1,17}$");
+        Matcher mat = pattern.matcher(s);
+        if(mat.find()){
+           check = true;
+        }
+        return check;
     }
+    
+    // hàm kiểm tra nhập số mã phòng
+    public static boolean checkGiaPhong(String s){
+        boolean check = false;
+        Pattern pattern = Pattern.compile("^\\d{1,170}$");
+        Matcher mat = pattern.matcher(s);
+        if(mat.find()){
+            check = true;
+        }
+        return check;
+    }
+    
+    // hàm kiểm tra nhập loại
+    public static boolean checkLoaiPhong(String s){
+        boolean check = false;
+        if("A".equals(s) || "B".equals(s) || "C".equals(s) || "D".equals(s)) {
+            check = true;
+        }
+        return check;
+    }
+    
+    // hàm kiểm tra nhập tinh trang phong
+    public static boolean checkTinhTrangPhong(boolean t, boolean f){
+        boolean check = false;
+        if((t && f == false )|| ( t == false && f)){
+            check = true;
+        }
+        return check;
+    }
+    
+    //kiem tra nhap
+    public static boolean kiemTraNhapPhong(String ma, String soNguoi,String loai, String gia, boolean t, boolean f){
+        boolean check = true;
+        
+        if(checkMaPhong(ma) == false){
+//            Alert a = new Alert(Alert.AlertType.ERROR);
+//            a.setTitle("Lỗi nhập !!! ");
+//            a.setContentText(" Vui lòng nhập lại mã hợp lệ.");
+//            a.show();
+            checkNhap = " Vui lòng nhập lại số phòng hợp lệ. ";
+            check = false;
+        }else
+             if(checkSoNguoi(soNguoi) == false){
+//                Alert a = new Alert(Alert.AlertType.ERROR);
+//                a.setTitle("Lỗi nhập !!! ");
+//                a.setContentText(" Vui lòng nhập lại số người hợp lệ. VD:2 ");
+//                a.show();
+                checkNhap = " Vui lòng nhập lại số người hợp lệ và không bỏ trống. VD:2 ";
+                check = false;
+            } else
+                 if(checkLoaiPhong(loai) == false){
+//                    Alert a = new Alert(Alert.AlertType.ERROR);
+//                    a.setTitle("Lỗi nhập !!! ");
+//                    a.setContentText(" Vui lòng chọn loại phòng hợp lệ.");
+//                    a.show();
+                    checkNhap = " Vui lòng chọn loại phòng hợp lệ và không bỏ trống. ";
+                    check = false;
+                }else
+                     if(checkGiaPhong(gia) == false){
+//                    Alert a = new Alert(Alert.AlertType.ERROR);
+//                    a.setTitle("Lỗi nhập !!! ");
+//                    a.setContentText(" Vui lòng chọn loại phòng hợp lệ.");
+//                    a.show();
+                    checkNhap = " Vui lòng nhập giá phòng hợp lệ và không bỏ trống. VD 1500000";
+                    check = false;
+                    } else
+                         if(checkTinhTrangPhong(t, f) == false){
+//                        Alert a = new Alert(Alert.AlertType.ERROR);
+//                        a.setTitle("Lỗi nhập !!! ");
+//                        a.setContentText(" Vui lòng chọn tinh trạng phòng ");
+//                        a.show();
+                        checkNhap = " Vui lòng chọn tinh trạng phòng ";
+                        check = false;
+                    }
+
+                
+                
+                
+        
+           
+        return check;
+    }
+     // hàm kiểm tra nhập số điện thoại hợp lệ
+    public static boolean checkSDT(String s){
+        boolean check = false;
+        Pattern pattern = Pattern.compile("^0\\d{9}$");
+        Matcher mat = pattern.matcher(s);
+        if(mat.find()){
+            check = true;
+        }
+        return check;
+    }
+    
+    
+    
+    
+    
+    // hàm kiểm tra nhập trên khách hàng hợp lệ
+    public static boolean checkNhapTenKhachHang(String s){
+        boolean check = false;
+        Pattern pattern = Pattern.compile("^[a-zA-z\\s\\p{L}]{3,40}$");
+        Matcher mat = pattern.matcher(s);
+        if(mat.find()){
+            check = true;
+        }
+        return check;
+    }
+    
+    
+    
+   
 }
