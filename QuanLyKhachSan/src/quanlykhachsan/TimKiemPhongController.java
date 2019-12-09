@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package quanlykhachsan;
+import QLKS.pojo.ChiTietHoaDon;
 import QLKS.pojo.KhachHang;
 import QLKS.pojo.LoaiPhong;
 import QLKS.pojo.Phong;
@@ -35,6 +36,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -51,12 +54,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import static quanlykhachsan.NhapKhachHangController.checkNhapTenKhachHang;
 import static quanlykhachsan.NhapKhachHangController.checkSDT;
 import static quanlykhachsan.Utils.dem;
 import static quanlykhachsan.Utils.noiDung;
 import static quanlykhachsan.Utils.tieuDe;
 import static quanlykhachsan.Utils.traloaiPhong;
-import static quanlykhachsan.NhapKhachHangController.checkNhapTen;
 
 /**
  * FXML Controller class
@@ -93,6 +96,10 @@ public class TimKiemPhongController implements Initializable {
     @FXML
     private TableColumn tcStatus;
     @FXML
+    private TableColumn tcStartDay;
+    @FXML
+    private TableColumn tcEndDay;
+    @FXML
     private Button btnCapNhat;
     @FXML 
     private TextField tfMa;
@@ -109,9 +116,25 @@ public class TimKiemPhongController implements Initializable {
     
     @FXML
     private Button btnXoa;
-
-    public static String content = "";
-    public static String checkNhap = "";
+    @FXML
+    private Button btnBook;
+    
+    @FXML
+    private DatePicker dbStart;
+    @FXML
+    private DatePicker dbEnd;
+    
+    @FXML 
+    private Label lbId;
+    @FXML 
+    private Label lbNu;
+    @FXML 
+    private Label lbTy;
+    @FXML
+    private Label lbPri;
+    
+    public int i = 0;
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
@@ -129,10 +152,11 @@ public class TimKiemPhongController implements Initializable {
         this.tcNumberR.setCellValueFactory(new PropertyValueFactory("maPhong"));
         this.tcPrice.setCellValueFactory(new PropertyValueFactory("giaP"));
         this.tcStatus.setCellValueFactory(new PropertyValueFactory("tinhTrangP"));
-        
+        this.tcStartDay.setCellValueFactory(new PropertyValueFactory("ngayDen"));
+        this.tcEndDay.setCellValueFactory(new PropertyValueFactory("ngayDi"));
         cbLoaiP.setItems(listLoaiP);
         cbLoai.setItems(listLoaiP);
-//        this.btnCapNhat.setVisible(false);
+        this.btnBook.setVisible(false);
         //kich lay mot thong tin khach hang
         tfSucChua.clear();
         cbLoai.getSelectionModel().clearSelection();
@@ -146,16 +170,26 @@ public class TimKiemPhongController implements Initializable {
             row.setOnMouseClicked(et -> {
 //                this.btnCapNhat.setVisible(true);
                 
-                Phong ph= this.tbPhong.getSelectionModel().getSelectedItem();
-                this.tfMa.setText(String.format("%d",ph.getMaPhong()));
-                this.tfSucChua.setText(String.format("%d",ph.getSucChua()));
-                this.cbLoai.getSelectionModel().select(ph.getLoaiPhong());
-                this.tfgia.setText(String.format("%2.0f",ph.getGiaPhong()));
+                Utils.ph = this.tbPhong.getSelectionModel().getSelectedItem();
+                this.tfMa.setText(String.format("%d",Utils.ph.getMaPhong()));
+                this.tfSucChua.setText(String.format("%d",Utils.ph.getSucChua()));
+                this.cbLoai.getSelectionModel().select(Utils.ph.getLoaiPhong());
+                this.tfgia.setText(String.format("%2.0f",Utils.ph.getGiaPhong()));
+                this.btnBook.setVisible(true);
                 
-                if ("Đã đặt".equals(ph.getTinhTrangP()) == true)
+                if ("Đã đặt".equals(Utils.ph.getTinhTrangP()) == true){
                     rdF.setSelected(true);
-                else
-                    rdT.setSelected(true);  
+                    
+                }
+                else{
+                    rdT.setSelected(true);
+                    
+                    
+                    
+            
+                }
+                      
+                
             });
 //            try {
 //                    loadSua();
@@ -189,7 +223,7 @@ public class TimKiemPhongController implements Initializable {
                 tinhTrang = -1;
         
         this.tbPhong.getItems().clear();
-        if  (!tfSoN.getText().isEmpty() && checkSoNguoi(nguoi) == false)
+        if  (!tfSoN.getText().isEmpty() && Utils.checkSoNguoi(nguoi) == false)
         {
             a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("Nhắc nhở");
@@ -207,7 +241,18 @@ public class TimKiemPhongController implements Initializable {
                     a.setTitle(Utils.tieuDe);
                     a.setContentText(Utils.noiDung);
                     a.show();
-                }
+                }tfMa.clear();
+            tfSoN.clear();
+            tfSucChua.clear();
+            tfgia.clear();
+            cbLoaiP.setValue("");
+            cbLoai.setValue("");
+            tfSucChua.clear();
+            rdF.setSelected(false);
+            rdF.setSelected(false);
+            rbAv.setSelected(false);
+            rbBusy.setSelected(false);
+            
 //            if (Utils.dem == -1){
 //                a = new Alert(Alert.AlertType.INFORMATION);
 //                a.setTitle(Utils.tieuDe);
@@ -261,6 +306,17 @@ public class TimKiemPhongController implements Initializable {
     public void loadAllPhong(String ma, String sucChua, int tinhT){
         this.tbPhong.getItems().clear();
         List<Phong> ph = Utils.laydsPhong(ma, sucChua, tinhT);
+        tfMa.clear();
+        tfSoN.clear();
+        tfSucChua.clear();
+        tfgia.clear();
+        cbLoaiP.setValue("");
+        cbLoai.setValue("");
+        tfSucChua.clear();
+        rdF.setSelected(false);
+        rdF.setSelected(false);
+        rbAv.setSelected(false);
+        rbBusy.setSelected(false);
         this.tbPhong.getItems().addAll(ph);
     }
     
@@ -268,6 +324,26 @@ public class TimKiemPhongController implements Initializable {
     public void hienAllHandler(ActionEvent event){
         
         loadAllPhong("", "", -2);
+    }
+    
+    
+    //Đóng app
+    public void closeHandler(ActionEvent event) throws IOException{
+//        Phong ph= this.tbPhong.getSelectionModel().getSelectedItem();
+////        this.lbId.setText(String.format("%d",ph.getMaPhong()));
+//        this.lbId.setText(tfMa.getText());
+//        this.lbNu.setText(tfSucChua.getText());
+//        this.lbPri.setText(tfgia.getText());
+////        this.lbNu.setText(String.format("%d",ph.getSucChua()));
+//        this.lbTy.setText(ph.getLoaiPhong());
+////        this.lbPri.setText(String.format("%2.0f",ph.getGiaPhong()));
+        Parent root = FXMLLoader.load(getClass().getResource("TimKiemPhong.fxml"));
+        
+        Scene scene = new Scene(root);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.close();
+        
     }
     
     //thêm phòng
@@ -284,14 +360,14 @@ public class TimKiemPhongController implements Initializable {
         if (tp == true){
             a = new Alert(Alert.AlertType.INFORMATION);
             a.setTitle("Kết quả ");
-            a.setContentText(content);
+            a.setContentText(Utils.content);
             a.show();
             loadAllPhong("", "", -2);
         }
         else{
             a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("Kết quả ");
-            a.setContentText(content);
+            a.setContentText(Utils.content);
             a.show();
         }
         
@@ -303,8 +379,8 @@ public class TimKiemPhongController implements Initializable {
         Criteria cr =session.createCriteria(Phong.class);
         
         boolean check = true;
-        if (this.kiemTraNhapPhong(ma, soNguoi,loai, gia, t, f) == false){
-            content = checkNhap;
+        if (Utils.kiemTraNhapPhong(ma, soNguoi,loai, gia, t, f) == false){
+            Utils.content = Utils.checkNhap;
             check = false;
             
         }
@@ -316,7 +392,7 @@ public class TimKiemPhongController implements Initializable {
 //                a.setTitle("Kết quả ");
 //                a.setContentText(" Số phòng bạn nhập đã tồn tại ");
 //                a.show();
-                  content = " Số phòng bạn nhập đã tồn tại ";
+                  Utils.content = " Số phòng bạn nhập đã tồn tại ";
                 check = false;
             }
             else{
@@ -336,7 +412,7 @@ public class TimKiemPhongController implements Initializable {
 //               a.setTitle("Kết quả ");
 //               a.setContentText(" Thêm khách hàng thành công");
 //               a.show();
-               content = " Thêm phòng thành công";
+               Utils.content = " Thêm khách hàng thành công";
                check = true;
                loadAllPhong("", "", -2);
             } catch (Exception e) {
@@ -346,7 +422,7 @@ public class TimKiemPhongController implements Initializable {
  //               a.setTitle("Kết quả ");
  //               a.setContentText(" Thêm khách hàng thất bại");
  //               a.show();
-                 content = " Thêm phòng thất bại";
+                 Utils.content = " Thêm khách hàng thất bại";
                 check = false;
             } finally{
                 session.close();
@@ -359,6 +435,46 @@ public class TimKiemPhongController implements Initializable {
         return check;
      }
      
+     //Hiện đặt phòng
+     public void hienDatPhongHandler(ActionEvent event) throws IOException{
+         Parent root = FXMLLoader.load(getClass().getResource("BookRoom.fxml"));
+        
+        Scene scene = new Scene(root);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+     }
+     
+     //hàm đặt phòng
+     public void datPhongHandler(ActionEvent event){
+        
+//               Alert a = new Alert(Alert.AlertType.INFORMATION);
+//        String soNguoi = tfSucChua.getText();
+//        String loai = (String)cbLoai.getSelectionModel().getSelectedItem();
+//        String gia = tfgia.getText();
+//        boolean t = rdT.isSelected();
+//        boolean f = rdF.isSelected();
+//        String ma = tfMa.getText();
+//        Date bd = Date.from(dbStart.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+//        Date kt = Date.from(dbEnd.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+//        Boolean tp = DatPhong(ma, soNguoi, loai, gia, t, f, bd, kt);
+//        if (tp == true){
+//            a = new Alert(Alert.AlertType.INFORMATION);
+//            a.setTitle("Kết quả ");
+//            a.setContentText(Utils.content);
+//            a.show();
+//            loadAllPhong("", "", -2);
+//        }
+//        else{
+//            a = new Alert(Alert.AlertType.ERROR);
+//            a.setTitle("Nhắc nhở ");
+//            a.setContentText(Utils.content);
+//            a.show();
+//        }
+     }
+     
+     
+     
       //cap nhap phòng
      public void CapNhatHandler(ActionEvent event){
         String soNguoi = tfSucChua.getText();
@@ -367,38 +483,20 @@ public class TimKiemPhongController implements Initializable {
         boolean t = rdT.isSelected();
         boolean f = rdF.isSelected();
         String ma = tfMa.getText();
-        boolean cn = capNhat(ma,soNguoi, loai, gia, t, f);
-        if (cn == true){
-            loadAllPhong("", "", -2);
-            Alert a = new Alert(Alert.AlertType.INFORMATION);
-            a.setTitle("Thông báo");
-            a.setContentText("Cập nhật phòng thành công.");
-            a.show(); 
-        }
-        else
+        if (Utils.kiemTraNhapPhong(ma, soNguoi,loai, gia, t, f) == false)
         {
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("Chú ý");
-            a.setContentText(content);
+            a.setContentText(Utils.checkNhap);
             a.show();
         }
-            
-    }
-     
-    //sửa Phong
-    public boolean capNhat(String ma, String soNguoi,String loai, String gia, boolean t, boolean f){
-        boolean check = true;
-        
-        if (this.kiemTraNhapPhong(ma, soNguoi,loai, gia, t, f) == false)
-        {
-            content = checkNhap;
-            check = false;
-        }
         else {
-                Phong ph = this.tbPhong.getSelectionModel().getSelectedItem();
+            Phong ph = this.tbPhong.getSelectionModel().getSelectedItem();
             if(ph == null){
-               content = " Bạn chưa chọn phòng để cập nhật.";
-               check = false;
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("Chú ý");
+                a.setContentText(" Bạn chưa chọn phòng để cập nhật.");
+                a.show();
             }
             else
             {
@@ -411,16 +509,30 @@ public class TimKiemPhongController implements Initializable {
                 ph.setTinhTrangP(tinhTP);
                 ph.setLoaiPhong(new LoaiPhong(loaiP, loai));
                 Utils.CapNhatPhong(ph);
-                content = "Cập nhật phòng thành công.";
+                Utils.content = "Cập nhật khách hàng thành công.";
+                loadAllPhong("", "", -2);
+                Alert a = new Alert(Alert.AlertType.INFORMATION);
+                a.setTitle("Thông báo");
+                a.setContentText("Cập nhật khách hàng thành công.");
+                a.show(); 
                 
             }
                
          }
         
-        
-        
-        return check;
+            
     }
+     
+//    //sửa Phong
+//    public boolean capNhat(String ma, String soNguoi,String loai, String gia, boolean t, boolean f){
+//        boolean check = true;
+//        
+//        
+//        
+//        
+//        
+//        return check;
+//    }
     
     //Xoa mot dong
     public void deleteRowOnTable(ActionEvent event){
@@ -439,9 +551,10 @@ public class TimKiemPhongController implements Initializable {
         });
     }
     
+    
     //Quay về trang chủ
     public void trangChuHandler(ActionEvent event) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("GiaoDienNhanVien.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("TrangChu.fxml"));
         
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -450,121 +563,21 @@ public class TimKiemPhongController implements Initializable {
     }
     
     
-    //load sửa
-//    public void loadSua() throws IOException{
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("SuaPhong.fxml"));
-//        Parent root = loader.load();
-//        Scene scene = new Scene(root);
-//        Stage stage = new Stage();
-//        stage.setScene(scene);
-//        stage.show();
-//        
-//    }
-    
-    // hàm kiểm tra nhập số người hợp lệ
-    public static boolean checkSoNguoi(String s){
-        boolean check = false;
-        Pattern pattern = Pattern.compile("^\\d{1,9}$");
-        Matcher mat = pattern.matcher(s);
-        if(mat.find()){
-            check = true;
-        }
-        return check;
-    }
-    
-    
-    // hàm kiểm tra nhập số mã phòng
-    public static boolean checkMaPhong(String s){
-        boolean check = false;
+    //load đặt
+    public void loadDatPhong() throws IOException{
+//        this.lbId.setText(this.tfMa.getText());
+//        this.lbNu.setText(this.tfSucChua.getText());
+//        this.lbPri.setText(this.tfgia.getText());
+//        this.lbTy.setText(this.cbLoai.getText());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("GiaoDienDP.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
         
-        Pattern pattern = Pattern.compile("^\\d{1,17}$");
-        Matcher mat = pattern.matcher(s);
-        if(mat.find()){
-           check = true;
-        }
-        return check;
     }
     
-    // hàm kiểm tra nhập số mã phòng
-    public static boolean checkGiaPhong(String s){
-        boolean check = false;
-        Pattern pattern = Pattern.compile("^\\d{1,170}$");
-        Matcher mat = pattern.matcher(s);
-        if(mat.find()){
-            check = true;
-        }
-        return check;
-    }
-    
-    // hàm kiểm tra nhập loại
-    public static boolean checkLoaiPhong(String s){
-        boolean check = false;
-        if("A".equals(s) || "B".equals(s) || "C".equals(s) || "D".equals(s)) {
-            check = true;
-        }
-        return check;
-    }
-    
-    // hàm kiểm tra nhập tinh trang phong
-    public static boolean checkTinhTrangPhong(boolean t, boolean f){
-        boolean check = false;
-        if((t && f == false )|| ( t == false && f)){
-            check = true;
-        }
-        return check;
-    }
-    
-    //kiem tra nhap
-    public static boolean kiemTraNhapPhong(String ma, String soNguoi,String loai, String gia, boolean t, boolean f){
-        boolean check = true;
-        
-        if(checkMaPhong(ma) == false){
-//            Alert a = new Alert(Alert.AlertType.ERROR);
-//            a.setTitle("Lỗi nhập !!! ");
-//            a.setContentText(" Vui lòng nhập lại mã hợp lệ.");
-//            a.show();
-            checkNhap = " Vui lòng nhập lại số phòng hợp lệ. ";
-            check = false;
-        }else
-             if(checkSoNguoi(soNguoi) == false){
-//                Alert a = new Alert(Alert.AlertType.ERROR);
-//                a.setTitle("Lỗi nhập !!! ");
-//                a.setContentText(" Vui lòng nhập lại số người hợp lệ. VD:2 ");
-//                a.show();
-                checkNhap = " Vui lòng nhập lại số người hợp lệ và không bỏ trống. VD:2 ";
-                check = false;
-            } else
-                 if(checkLoaiPhong(loai) == false){
-//                    Alert a = new Alert(Alert.AlertType.ERROR);
-//                    a.setTitle("Lỗi nhập !!! ");
-//                    a.setContentText(" Vui lòng chọn loại phòng hợp lệ.");
-//                    a.show();
-                    checkNhap = " Vui lòng chọn loại phòng hợp lệ và không bỏ trống. ";
-                    check = false;
-                }else
-                     if(checkGiaPhong(gia) == false){
-//                    Alert a = new Alert(Alert.AlertType.ERROR);
-//                    a.setTitle("Lỗi nhập !!! ");
-//                    a.setContentText(" Vui lòng chọn loại phòng hợp lệ.");
-//                    a.show();
-                    checkNhap = " Vui lòng nhập giá phòng hợp lệ và không bỏ trống. VD 1500000";
-                    check = false;
-                    } else
-                         if(checkTinhTrangPhong(t, f) == false){
-//                        Alert a = new Alert(Alert.AlertType.ERROR);
-//                        a.setTitle("Lỗi nhập !!! ");
-//                        a.setContentText(" Vui lòng chọn tinh trạng phòng ");
-//                        a.show();
-                        checkNhap = " Vui lòng chọn tinh trạng phòng ";
-                        check = false;
-                    }
-
-                
-                
-                
-        
-           
-        return check;
-    }
+   
     
 }
