@@ -129,7 +129,7 @@ public class ThongTinNhanVienController implements Initializable {
                     Utils.xoaNhanVien(nv);
                     
                 }
-            reloadTableView(Utils.laydsNV("", 0));
+            reloadTableView(Utils.laydanhsachNV("", 0));
             this.cleanBangNhapThongTinNV();
                
             });
@@ -137,7 +137,7 @@ public class ThongTinNhanVienController implements Initializable {
         });
         
         this.txtTimKiem.textProperty().addListener(et -> {
-            List<NhanVien> nv = Utils.laydsNV(this.txtTimKiem.getText(), 0);
+            List<NhanVien> nv = Utils.laydanhsachNV(this.txtTimKiem.getText(), 0);
             reloadTableView(nv);
         });
     }  
@@ -152,7 +152,7 @@ public class ThongTinNhanVienController implements Initializable {
         clQueQuan.setCellValueFactory(new PropertyValueFactory("queQuan"));
         clNgayVaoLam.setCellValueFactory(new PropertyValueFactory("ngayVaoLam"));
         clChucVu.setCellValueFactory(new PropertyValueFactory("chucVu"));
-        List<NhanVien> nhanvien = Utils.laydsNV("", 0);
+        List<NhanVien> nhanvien = Utils.laydanhsachNV("", 0);
         this.tbNhanVien.getItems().addAll(nhanvien);
    
     }
@@ -182,7 +182,7 @@ public class ThongTinNhanVienController implements Initializable {
         }
         
         NhapKhachHangController check = new NhapKhachHangController();
-        if( !check.checkNhapTen(txtHoNV.getText()) || !check.checkNhapTen(txtTenNV.getText())){
+        if( !check.checkNhapTenKhachHang(txtHoNV.getText()) || !check.checkNhapTenKhachHang(txtTenNV.getText())){
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("Lỗi nhập !!! ");
             a.setContentText("Vui lòng nhập họ hoặc tên nhân viên hợp lệ!");
@@ -192,7 +192,7 @@ public class ThongTinNhanVienController implements Initializable {
         
         Date ngaySinh = Date.from(dpNgaySinh.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
         Date ngayVaoLam = Date.from(dpNgayVaoLam.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        if( !check.checkNgayHopLe(ngaySinh) || !check.checkNgayHopLe(ngayVaoLam)){
+        if( !Utils.checkNgayHopLe(ngaySinh) || !Utils.checkNgayHopLe(ngayVaoLam)){
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("Lỗi nhập !!! ");
             a.setContentText("Vui lòng nhập ngày hợp lệ!");
@@ -210,7 +210,7 @@ public class ThongTinNhanVienController implements Initializable {
         a.show();
         
         this.cleanBangNhapThongTinNV();
-        this.reloadTableView(Utils.laydsNV("", 0));
+        this.reloadTableView(Utils.laydanhsachNV("", 0));
     }
     
     private void reloadTableView(List<NhanVien> nhanvien) {
@@ -249,7 +249,7 @@ public class ThongTinNhanVienController implements Initializable {
         }
         
         NhapKhachHangController check = new NhapKhachHangController();
-        if( !check.checkNhapTen(txtHoNV.getText()) || !check.checkNhapTen(txtTenNV.getText())){
+        if( !check.checkNhapTenKhachHang(txtHoNV.getText()) || !check.checkNhapTenKhachHang(txtTenNV.getText())){
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("Lỗi nhập !!! ");
             a.setContentText("Vui lòng nhập họ hoặc tên nhân viên hợp lệ!");
@@ -259,7 +259,7 @@ public class ThongTinNhanVienController implements Initializable {
         
         Date ngaySinh = Date.from(dpNgaySinh.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
         Date ngayVaoLam = Date.from(dpNgayVaoLam.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        if( !check.checkNgayHopLe(ngaySinh) || !check.checkNgayHopLe(ngayVaoLam)){
+        if( !Utils.checkNgayHopLe(ngaySinh) || !Utils.checkNgayHopLe(ngayVaoLam)){
             Alert a = new Alert(Alert.AlertType.ERROR);
             a.setTitle("Lỗi nhập !!! ");
             a.setContentText("Vui lòng nhập ngày hợp lệ!");
@@ -272,7 +272,7 @@ public class ThongTinNhanVienController implements Initializable {
                 (String)cbChucVu.getValue());
         Utils.CapNhatNhanVien(nv);
         this.cleanBangNhapThongTinNV();
-        this.reloadTableView(Utils.laydsNV("", 0));
+        this.reloadTableView(Utils.laydanhsachNV("", 0));
     }
     
     public void troVe(ActionEvent event) throws IOException{

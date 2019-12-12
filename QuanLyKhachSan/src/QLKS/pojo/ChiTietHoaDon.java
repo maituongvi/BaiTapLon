@@ -36,7 +36,7 @@ public class ChiTietHoaDon implements Serializable {
     @JoinColumn(name = "maHD" )
     private HoaDon maHD;
     @Column(name = "giaTien")
-    private String giaTien;
+    private double giaTien;
     @Column(name = "ngayDen")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date ngayDen;
@@ -44,7 +44,7 @@ public class ChiTietHoaDon implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date ngayDi;
     
-    public ChiTietHoaDon(Phong phong, HoaDon maHD, String giaTien, Date ngayDen, Date ngayDi){
+    public ChiTietHoaDon(Phong phong, HoaDon maHD, double giaTien, Date ngayDen, Date ngayDi){
         this.phong = phong;
         this.maHD = maHD;
         this.giaTien = giaTien;
@@ -90,14 +90,14 @@ public class ChiTietHoaDon implements Serializable {
     /**
      * @return the giaTien
      */
-    public String getGiaTien() {
+    public double getGiaTien() {
         return giaTien;
     }
 
     /**
      * @param giaTien the giaTien to set
      */
-    public void setGiaTien(String giaTien) {
+    public void setGiaTien(double giaTien) {
         this.giaTien = giaTien;
     }
 

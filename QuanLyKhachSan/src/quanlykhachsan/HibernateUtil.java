@@ -29,6 +29,8 @@ public class HibernateUtil {
         configure.addAnnotatedClass(NhanVien.class);
         configure.addAnnotatedClass(LoaiPhong.class);
         configure.addAnnotatedClass(Phong.class);
+        configure.addAnnotatedClass(HoaDon.class);
+        configure.addAnnotatedClass(ChiTietHoaDon.class);
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
                 applySettings(configure.getProperties());
         FACTORY = configure.buildSessionFactory(builder.build());

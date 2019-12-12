@@ -74,6 +74,10 @@ public class Phong implements Serializable {
     public String getGiaP() {
         return String.format("%2.0f%s", giaP, " VNĐ");
     }
+    
+    public double getGiaP1() {
+        return giaP;
+    }
     public double getGiaPhong() {
         return giaP;
     }

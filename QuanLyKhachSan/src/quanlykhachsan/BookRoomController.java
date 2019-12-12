@@ -181,17 +181,27 @@ public class BookRoomController implements Initializable {
                                             Session session = factory.openSession();
                                             Transaction trans =null;
                                             try {
-
+                                                
                                                 trans = session.beginTransaction();
                                                 Utils.ph.setTinhTrangP(1);
                                                 id = UUID.randomUUID().toString();
                                                 Date now = new Date();
-                                                if (Utils.laydsHD(kh.get(0), listNV.get(0)).isEmpty())
-                                                    tongTien = Double.parseDouble(Utils.ph.getGiaP());
+                                                if (Utils.laydsHD(kh.get(0), listNV.get(0)).isEmpty()){
+                                                    System.out.println(Utils.ph.getGiaP1());
+                                                    tongTien = Utils.ph.getGiaP1();
+                                                    System.out.println(tongTien);
+                                                    System.out.println(kh.get(0));
+                                                }
                                                 else
-                                                    tongTien += Double.parseDouble(Utils.ph.getGiaP());
-                                                HoaDon hd = new HoaDon(id,listNV.get(0) , kh.get(0),now,tongTien);
-                                                ChiTietHoaDon cthd = new ChiTietHoaDon(Utils.ph, hd, Utils.ph.getGiaP(), ngStart, ngStart);
+                                                    tongTien += Utils.ph.getGiaP1();
+                                                System.out.println(tongTien);
+                                                System.out.println("TRY");
+                                                System.out.println(id);
+                                                System.out.println(listNV.get(0));
+                                                System.out.println(kh.get(0));
+                                                System.out.println(now);
+                                                HoaDon hd = new HoaDon(id,listNV.get(0) , kh.get(0), now ,tongTien);
+                                                ChiTietHoaDon cthd = new ChiTietHoaDon(Utils.ph, hd, Utils.ph.getGiaP1(), ngStart, ngStart);
                                                 session.save(hd);
                                                 session.save(cthd);
                                                 trans.commit();
@@ -204,6 +214,7 @@ public class BookRoomController implements Initializable {
                                   //               a.setTitle("Kết quả ");
                                   //               a.setContentText(" Thêm khách hàng thất bại");
                                   //               a.show();
+                                                  System.out.println("CATCH");
                                                   System.out.println(e.getMessage());
                                                   Utils.content = " Đặt phòng thất bại";
 

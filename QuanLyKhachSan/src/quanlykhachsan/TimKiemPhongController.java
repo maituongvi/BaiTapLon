@@ -54,7 +54,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import static quanlykhachsan.NhapKhachHangController.checkNhapTenKhachHang;
 import static quanlykhachsan.NhapKhachHangController.checkSDT;
 import static quanlykhachsan.Utils.dem;
 import static quanlykhachsan.Utils.noiDung;
