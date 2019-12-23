@@ -28,9 +28,6 @@ public class ChiTietHoaDon implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "maPhong" )
     private Phong phong;
-
-    
-    
     @Id
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "maHD" )
@@ -60,6 +57,10 @@ public class ChiTietHoaDon implements Serializable {
     /**
      * @return the phong
      */
+    public Phong getPhongbyMa(String maPhong){
+        return phong;
+    }
+    
     public Phong getPhong() {
         return phong;
     }

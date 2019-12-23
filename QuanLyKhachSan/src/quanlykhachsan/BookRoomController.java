@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -31,6 +32,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -45,8 +47,9 @@ import static quanlykhachsan.Utils.factory;
  * @author Admin
  */
 public class BookRoomController implements Initializable {
+
     @FXML
-    private TextField tfGT ;
+    private TextField tfGT;
     @FXML
     private TextField tfTenKH;
     @FXML
@@ -78,13 +81,14 @@ public class BookRoomController implements Initializable {
     private TextField tfIdNV;
     List<KhachHang> kh = null;
     double tongTien;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        tfMaP.setText(String.format("%d",Utils.ph.getMaPhong()));
+        tfMaP.setText(String.format("%d", Utils.ph.getMaPhong()));
         tfLoaiP.setText(Utils.ph.getLoaiPhong());
-        tfGiaP.setText(String.format("%2.0f",Utils.ph.getGiaPhong()));
-        tfSN.setText(String.format("%d",Utils.ph.getSucChua()) + " people");
+        tfGiaP.setText(String.format("%2.0f", Utils.ph.getGiaPhong()));
+        tfSN.setText(String.format("%d", Utils.ph.getSucChua()) + " people");
         tfTenKH.clear();
         tfMaKH.clear();
         tfSDT.clear();
@@ -93,163 +97,179 @@ public class BookRoomController implements Initializable {
         dbEnd.setValue(null);
         dbStart.setValue(null);
         
-    }    
-    
+        dbStart.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate today = LocalDate.now();
+
+                setDisable(empty || date.compareTo(today) < 0);
+                
+            }
+        });
+        dbEnd.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate today = LocalDate.now();
+
+                setDisable(empty || date.compareTo(today) < 0);
+            }
+        });
+
+    }
+
     //tìm kiếm theo số điện thoại
-    public void searchKHHandler(ActionEvent event){
+    public void searchKHHandler(ActionEvent event) {
         Alert a = new Alert(Alert.AlertType.ERROR);
-        if (!Utils.checkSDT(this.txtTimKiem.getText().trim())){
+        if (!Utils.checkSDT(this.txtTimKiem.getText().trim())) {
             a.setTitle("Thông báo ");
             a.setContentText(" Bạn cần nhập số điện thoại hợp lệ VD: 0708384593");
             a.show();
-        }
-        else {
+        } else {
             kh = Utils.laydsKHBangSDT(this.txtTimKiem.getText().trim(), 0);
-            if (!kh.isEmpty()){
+            if (!kh.isEmpty()) {
                 this.tfTenKH.setText(kh.get(0).getTenKH());
                 this.tfGTKH.setText(kh.get(0).getGioiTinh());
                 this.tfSDT.setText(kh.get(0).getSdt());
                 this.tfMaKH.setText(kh.get(0).getMaKH());
-                LocalDate day =kh.get(0).getNgaySinh().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate day = kh.get(0).getNgaySinh().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy");
-                
-                
+
                 this.tfGT.setText(ft.format(kh.get(0).getNgaySinh()));
-            }else {
+            } else {
                 a = new Alert(Alert.AlertType.INFORMATION);
                 a.setTitle("Thông báo ");
                 a.setContentText(" Số điện thoại bạn nhập không tồn tại");
                 a.show();
-                
+
             }
         }
-        
+
     }
-    
-    public void bookPhongHandler(ActionEvent event){
+
+    public void bookPhongHandler(ActionEvent event) {
         Alert a = new Alert(Alert.AlertType.INFORMATION);
-        if (kh == null){
+        if (kh == null) {
             a.setTitle("Cảnh báo ");
             a.setContentText(" Bạn cần tìm khách hàng trước khi đặt phòng! ");
             a.show();
-        }else 
-            if (dbStart.getValue() == null || dbEnd.getValue() == null){
+        } else if (dbStart.getValue() == null || dbEnd.getValue() == null) {
             a.setTitle("Thông báo ");
             a.setContentText(" Bạn không được bỏ trống chọn ngày");
             a.show();
-            } 
-            else 
-                if (tfIdNV.getText().isEmpty()){
-                    a.setTitle("Thông báo ");
-                    a.setContentText(" Bạn cần nhập mã nhân viên");
+        } else if (tfIdNV.getText().isEmpty()) {
+            a.setTitle("Thông báo ");
+            a.setContentText(" Bạn cần nhập mã nhân viên");
+            a.show();
+        } else {
+
+            Date ngStart = Date.from(dbStart.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            Date ngEnd = Date.from(dbEnd.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            boolean ck = Utils.checkNgayStart(ngStart, ngEnd);
+            if (ck == false) {
+                a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("Chú ý ");
+                a.setContentText(Utils.noiDung);
+                a.show();
+            } else {
+                if (tfIdNV.getText().isEmpty()) {
+                    a = new Alert(Alert.AlertType.ERROR);
+                    a.setTitle("Cảnh báo ");
+                    a.setContentText(" Bạn cần nhập mã nhân viên ");
                     a.show();
                 } else {
-                    
-                        Date ngStart = Date.from(dbStart.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-                        Date ngEnd = Date.from(dbEnd.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-                        boolean ck = Utils.checkNgayStart(ngStart, ngEnd);
-                        if(ck == false){
+                    if (!Utils.checkMaNV(tfIdNV.getText().trim())) {
+                        a = new Alert(Alert.AlertType.ERROR);
+                        a.setTitle("Thông báo ");
+                        a.setContentText(" Mã nhân viên không hợp lệ. VD: mã hợp lệ: 1 ");
+                        a.show();
+                    } else {
+                        List<NhanVien> listNV = Utils.laydsNV(tfIdNV.getText(), 0);
+//                        a.setTitle("Thông báo ");
+//                        a.setContentText(" Không tìm thấy mã nhân viên! " + listNV.get(0).getIdnhanVien());
+//                        a.show();
+                        if (listNV.isEmpty()) {
                             a = new Alert(Alert.AlertType.ERROR);
-                            a.setTitle("Chú ý ");
-                            a.setContentText(Utils.noiDung);
+                            a.setTitle("Thông báo ");
+                            a.setContentText(" Không tìm thấy mã nhân viên! ");
                             a.show();
-                        }else{
-                            if (tfIdNV.getText().isEmpty()){
+                        } else {
+                            List<ChiTietHoaDon> kq = Utils.checkNgayDat(ngStart, ngEnd,Utils.ph);
+                            if (!kq.isEmpty()) {
+                                System.out.println(kq);
                                 a = new Alert(Alert.AlertType.ERROR);
-                                a.setTitle("Cảnh báo ");
-                                a.setContentText(" Bạn cần nhập mã nhân viên ");
+                                a.setTitle("Thông báo ");
+                                a.setContentText(" Ngày bạn chọn đã có khách đặt. ");
+                                a.show();
+                            } else {
+                                Session session = factory.openSession();
+                                Transaction trans = null;
+                                try {
+
+                                    trans = session.beginTransaction();
+                                    Utils.ph.setTinhTrangP(1);
+                                    Utils.CapNhatPhong(Utils.ph);
+
+                                    Date now = new Date();
+                                    HoaDon hd;
+                                    if (Utils.laydsHD(Utils.id, kh.get(0)).isEmpty()) {
+                                        tongTien = Utils.ph.getGiaPhong();
+                                        Utils.id = UUID.randomUUID().toString();
+                                        hd = new HoaDon(Utils.id, listNV.get(0), kh.get(0), now, tongTien);
+                                        session.save(hd);
+                                    } else {
+                                        tongTien += Utils.ph.getGiaPhong();
+                                        hd = Utils.laydsHD(Utils.id, kh.get(0)).get(0);
+                                        hd.setTongTien(tongTien);
+                                        Utils.CapNhatHD(hd);
+                                    }
+
+                                    ChiTietHoaDon cthd = new ChiTietHoaDon(Utils.ph, hd, Utils.ph.getGiaPhong(), ngStart, ngEnd);
+
+                                    session.save(cthd);
+                                    trans.commit();
+                                    Utils.content = " Bạn đã đặt phòng thành công";
+
+                                } catch (Exception e) {
+                                    if (trans == null) {
+                                        trans.rollback();
+                                    }
+                                    //               a = new Alert(Alert.AlertType.ERROR);
+                                    //               a.setTitle("Kết quả ");
+                                    //               a.setContentText(" Thêm khách hàng thất bại");
+                                    //               a.show();
+                                    System.out.println(e.getMessage());
+                                    Utils.content = " Đặt phòng thất bại";
+
+                                } finally {
+                                    session.close();
+                                }
+
+                                a.setTitle("Thông báo ");
+                                a.setContentText(Utils.content);
                                 a.show();
                             }
-                            else {
-                                    if (!Utils.checkMaNV(tfIdNV.getText().trim())){
-                                        a = new Alert(Alert.AlertType.ERROR);
-                                        a.setTitle("Thông báo ");
-                                        a.setContentText(" Mã nhân viên không hợp lệ. VD: mã hợp lệ: 1 ");
-                                        a.show();
-                                    }else{
-                                        List<NhanVien> listNV = Utils.laydsNV(tfIdNV.getText().trim(), 0);
-                                        a.setTitle("Thông báo ");
-                                        a.setContentText(" Không tìm thấy mã nhân viên! "+ listNV);
-                                        a.show();
-                                        if (listNV.isEmpty()){
-                                            a = new Alert(Alert.AlertType.ERROR);
-                                            a.setTitle("Thông báo ");
-                                            a.setContentText(" Không tìm thấy mã nhân viên! "+ listNV);
-                                            a.show();
-                                        }
-                                        else {
-                                            Session session = factory.openSession();
-                                            Transaction trans =null;
-                                            try {
-                                                
-                                                trans = session.beginTransaction();
-                                                Utils.ph.setTinhTrangP(1);
-                                                id = UUID.randomUUID().toString();
-                                                Date now = new Date();
-                                                if (Utils.laydsHD(kh.get(0), listNV.get(0)).isEmpty()){
-                                                    System.out.println(Utils.ph.getGiaP1());
-                                                    tongTien = Utils.ph.getGiaP1();
-                                                    System.out.println(tongTien);
-                                                    System.out.println(kh.get(0));
-                                                }
-                                                else
-                                                    tongTien += Utils.ph.getGiaP1();
-                                                System.out.println(tongTien);
-                                                System.out.println("TRY");
-                                                System.out.println(id);
-                                                System.out.println(listNV.get(0));
-                                                System.out.println(kh.get(0));
-                                                System.out.println(now);
-                                                HoaDon hd = new HoaDon(id,listNV.get(0) , kh.get(0), now ,tongTien);
-                                                ChiTietHoaDon cthd = new ChiTietHoaDon(Utils.ph, hd, Utils.ph.getGiaP1(), ngStart, ngStart);
-                                                session.save(hd);
-                                                session.save(cthd);
-                                                trans.commit();
-                                                Utils.content = " Bạn đã đặt phòng thành công";
 
-                                             } catch (Exception e) {
-                                                 if (trans == null)
-                                                     trans.rollback();
-                                  //               a = new Alert(Alert.AlertType.ERROR);
-                                  //               a.setTitle("Kết quả ");
-                                  //               a.setContentText(" Thêm khách hàng thất bại");
-                                  //               a.show();
-                                                  System.out.println("CATCH");
-                                                  System.out.println(e.getMessage());
-                                                  Utils.content = " Đặt phòng thất bại";
-
-                                        } finally{
-                                                 session.close();
-                                            }
-
-                                            a.setTitle("Thông báo ");
-                                            a.setContentText(Utils.content);
-                                            a.show();
-                                        }
-                                }
-                            }
-                            
-
-
-                    
+                        }
+                    }
                 }
+
+            }
         }
-        
-        
+
     }
-    
-     //Quay về trang phòng
-     public void quayVeFormPhongHandler(ActionEvent event) throws IOException{
+
+    //Quay về trang phòng
+    public void quayVeFormPhongHandler(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("TimKiemPhong.fxml"));
-        
+
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
-     }
-     
-     //reset trang phòng
-     public void resetHandler(ActionEvent event) {
+    }
+
+    //reset trang phòng
+    public void resetHandler(ActionEvent event) {
         tfTenKH.clear();
         tfMaKH.clear();
         tfGT.clear();
@@ -258,18 +278,17 @@ public class BookRoomController implements Initializable {
         tfGTKH.clear();
         dbEnd.setValue(null);
         dbStart.setValue(null);
-     }
-     
-      //Đóng app
-    public void closeAppHandler(ActionEvent event) throws IOException{
+    }
+
+    //Đóng app
+    public void closeAppHandler(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("BookRoom.fxml"));
-        
+
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.close();
-        
+
     }
-    
-    
+
 }

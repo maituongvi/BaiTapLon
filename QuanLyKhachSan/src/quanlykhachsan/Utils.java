@@ -5,11 +5,13 @@
  */
 package quanlykhachsan;
 
+import QLKS.pojo.ChiTietHoaDon;
 import QLKS.pojo.HoaDon;
 import QLKS.pojo.KhachHang;
 import QLKS.pojo.LoaiPhong;
 import QLKS.pojo.NhanVien;
 import QLKS.pojo.Phong;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -17,6 +19,7 @@ import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javax.persistence.Query;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -38,6 +41,7 @@ public class Utils {
     public static String checkNhap = "";
     public static Phong ph;
     public static NhanVien nv;
+    public static String id = "";
     public static List<KhachHang> laydsKH(String kw, int limit){
         Session session = factory.openSession();
         Criteria cr =session.createCriteria(KhachHang.class);
@@ -173,18 +177,20 @@ public class Utils {
         session.close();
     }
     
-    
-    public static List<KhachHang> laydsKHBangSDT(String kw, int limit){
+      public static List<KhachHang> laydsKHBangSDT(String kw, int limit){
         Session session = factory.openSession();
         Criteria cr =session.createCriteria(KhachHang.class);
         
         if(!kw.isEmpty()){
             cr.add(Restrictions.ilike("sdt", kw));
         }
+        
+        
         List<KhachHang> kh =cr.list();
         session.close();
         return kh;
     }
+    
     
     public static List<NhanVien> laydsNV(String kw, int limit){
         Session session = factory.openSession();
@@ -193,22 +199,32 @@ public class Utils {
         if(!kw.isEmpty()){
             cr.add(Restrictions.eq("idnhanVien", Integer.parseInt(kw)));
         }
-        List<NhanVien> nv =cr.list();
+        List<NhanVien> listNV =cr.list();
         session.close();
-        return nv;
+        return listNV;
     }
     
     
-    public static List<HoaDon> laydsHD(KhachHang kh, NhanVien nv){
+    public static List<HoaDon> laydsHD(String id, KhachHang kh){
         Session session = factory.openSession();
         Criteria cr =session.createCriteria(HoaDon.class);
         
-        if(kh != null){
-            cr.add(Restrictions.and(Restrictions.eq("kh", kh),Restrictions.eq("nv", nv)));
+        if(id != null){
+            cr.add(Restrictions.and(Restrictions.ilike("maHD", id),Restrictions.eq("kh", kh) ));
         }
         List<HoaDon> hd =cr.list();
         session.close();
         return hd;
+    }
+    
+    public static void CapNhatHD(HoaDon hd){
+        Session session = factory.openSession();
+        
+        Transaction trans = session.beginTransaction();
+        session.saveOrUpdate(hd);
+        trans.commit();
+        
+        session.close();
     }
     
     public static int traloaiPhong(String loai){
@@ -238,23 +254,21 @@ public class Utils {
         Date now = new Date();
         return ngay.before(now);
     }
-    
+   
+  
     
      //check ngay start
-    public static boolean checkNgayStart(Date ngayStart, Date ngayEnd){
+    public static boolean checkNgayStart(Date ngayStart, Date ngayEnd) {
         boolean check = true;
-        if (Utils.checkNgayHopLe(ngayStart) == true || Utils.checkNgayHopLe(ngayEnd) == true){
-            check = false;
-            noiDung = " Bạn cần nhập ngày hợp lệ";
+
+        check = ngayStart.before(ngayEnd);
+        if (check == false) {
+            noiDung = " Ngày trả phòng phải sau ngày bắt đầu! ";
         }
-        else{
-            check = ngayStart.before(ngayEnd);
-            if (check == false)
-                noiDung = " Ngày trả phòng phải sau ngày bắt đầu! ";
-        }
-            
+
         return check;
     }
+
     // hàm kiểm tra nhập số người hợp lệ
     public static boolean checkSoNguoi(String s){
         boolean check = false;
@@ -431,6 +445,24 @@ public class Utils {
         
         session.close();
     }
+    
+    // check ngày đó đã có người đặt chưa?
+    public static List<ChiTietHoaDon> checkNgayDat(Date ngayDen, Date ngayDi, Phong p){
+        Session session = factory.openSession();
+        org.hibernate.Query q =  session.createQuery("FROM ChiTietHoaDon A"
+                + " WHERE A.phong = :room AND (( A.ngayDen < :ngay1 AND A.ngayDi > :ngay1 ) "
+                + "OR ( A.ngayDen < :ngay2 AND A.ngayDi > :ngay2 ) OR "
+                + "( A.ngayDen > :ngay1 AND A.ngayDi < :ngay2 ) )");
+             
+        q.setParameter("ngay1", ngayDen);
+        q.setParameter("ngay2", ngayDi);
+        q.setParameter("room",p);
+        List<ChiTietHoaDon> list = q.list();
+        return list;
+        
+    }
+    
+   
     
     
    
