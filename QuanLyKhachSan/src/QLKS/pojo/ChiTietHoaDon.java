@@ -28,12 +28,17 @@ public class ChiTietHoaDon implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "maPhong" )
     private Phong phong;
+
+    
+    
     @Id
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "maHD" )
-    private HoaDon maHD;
+    private HoaDon hd;
     @Column(name = "giaTien")
     private double giaTien;
+    
+    @Id
     @Column(name = "ngayDen")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date ngayDen;
@@ -43,7 +48,7 @@ public class ChiTietHoaDon implements Serializable {
     
     public ChiTietHoaDon(Phong phong, HoaDon maHD, double giaTien, Date ngayDen, Date ngayDi){
         this.phong = phong;
-        this.maHD = maHD;
+        this.hd = maHD;
         this.giaTien = giaTien;
         this.ngayDen = ngayDen;
         this.ngayDi = ngayDi;
@@ -57,10 +62,6 @@ public class ChiTietHoaDon implements Serializable {
     /**
      * @return the phong
      */
-    public Phong getPhongbyMa(String maPhong){
-        return phong;
-    }
-    
     public Phong getPhong() {
         return phong;
     }
@@ -75,17 +76,17 @@ public class ChiTietHoaDon implements Serializable {
     }
 
     /**
-     * @return the maHD
+     * @return the hd
      */
     public HoaDon getMaHD() {
-        return maHD;
+        return hd;
     }
 
     /**
-     * @param maHD the maHD to set
+     * @param maHD the hd to set
      */
     public void setMaHD(HoaDon maHD) {
-        this.maHD = maHD;
+        this.hd = maHD;
     }
 
     /**
