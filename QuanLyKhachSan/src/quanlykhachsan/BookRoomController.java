@@ -16,7 +16,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -32,7 +31,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -40,6 +38,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import static quanlykhachsan.Utils.factory;
+import static quanlykhachsan.Utils.removeTime;
 
 /**
  * FXML Controller class
@@ -47,9 +46,8 @@ import static quanlykhachsan.Utils.factory;
  * @author Admin
  */
 public class BookRoomController implements Initializable {
-
     @FXML
-    private TextField tfGT;
+    private TextField tfGT ;
     @FXML
     private TextField tfTenKH;
     @FXML
@@ -76,19 +74,19 @@ public class BookRoomController implements Initializable {
     private TextField txtTimKiem;
     @FXML
     private Button search;
-    String id = "";
+    
     @FXML
     private TextField tfIdNV;
     List<KhachHang> kh = null;
     double tongTien;
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        tfMaP.setText(String.format("%d", Utils.ph.getMaPhong()));
+        
+        tfMaP.setText(String.format("%d",Utils.ph.getMaPhong()));
         tfLoaiP.setText(Utils.ph.getLoaiPhong());
-        tfGiaP.setText(String.format("%2.0f", Utils.ph.getGiaPhong()));
-        tfSN.setText(String.format("%d", Utils.ph.getSucChua()) + " people");
+        tfGiaP.setText(String.format("%2.0f",Utils.ph.getGiaPhong()));
+        tfSN.setText(String.format("%d",Utils.ph.getSucChua()) + " people");
         tfTenKH.clear();
         tfMaKH.clear();
         tfSDT.clear();
@@ -97,55 +95,40 @@ public class BookRoomController implements Initializable {
         dbEnd.setValue(null);
         dbStart.setValue(null);
         
-        dbStart.setDayCellFactory(picker -> new DateCell() {
-            public void updateItem(LocalDate date, boolean empty) {
-                super.updateItem(date, empty);
-                LocalDate today = LocalDate.now();
-
-                setDisable(empty || date.compareTo(today) < 0);
-                
-            }
-        });
-        dbEnd.setDayCellFactory(picker -> new DateCell() {
-            public void updateItem(LocalDate date, boolean empty) {
-                super.updateItem(date, empty);
-                LocalDate today = LocalDate.now();
-
-                setDisable(empty || date.compareTo(today) < 0);
-            }
-        });
-
-    }
-
+    }    
+    
     //tìm kiếm theo số điện thoại
-    public void searchKHHandler(ActionEvent event) {
+    public void searchKHHandler(ActionEvent event){
         Alert a = new Alert(Alert.AlertType.ERROR);
-        if (!Utils.checkSDT(this.txtTimKiem.getText().trim())) {
+        if (!Utils.checkSDT(this.txtTimKiem.getText().trim())){
             a.setTitle("Thông báo ");
             a.setContentText(" Bạn cần nhập số điện thoại hợp lệ VD: 0708384593");
             a.show();
-        } else {
+        }
+        else {
             kh = Utils.laydsKHBangSDT(this.txtTimKiem.getText().trim(), 0);
-            if (!kh.isEmpty()) {
+            if (!kh.isEmpty()){
                 this.tfTenKH.setText(kh.get(0).getTenKH());
                 this.tfGTKH.setText(kh.get(0).getGioiTinh());
                 this.tfSDT.setText(kh.get(0).getSdt());
                 this.tfMaKH.setText(kh.get(0).getMaKH());
-                LocalDate day = kh.get(0).getNgaySinh().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate day =kh.get(0).getNgaySinh().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 SimpleDateFormat ft = new SimpleDateFormat("dd/MM/yyyy");
-
+                
+                
                 this.tfGT.setText(ft.format(kh.get(0).getNgaySinh()));
-            } else {
+            }else {
                 a = new Alert(Alert.AlertType.INFORMATION);
                 a.setTitle("Thông báo ");
                 a.setContentText(" Số điện thoại bạn nhập không tồn tại");
                 a.show();
-
+                
             }
         }
-
+        
     }
-
+    
+    
     public void bookPhongHandler(ActionEvent event) {
         Alert a = new Alert(Alert.AlertType.INFORMATION);
         if (kh == null) {
@@ -210,20 +193,19 @@ public class BookRoomController implements Initializable {
                                     Utils.CapNhatPhong(Utils.ph);
 
                                     Date now = new Date();
-                                    HoaDon hd;
                                     if (Utils.laydsHD(Utils.id, kh.get(0)).isEmpty()) {
                                         tongTien = Utils.ph.getGiaPhong();
                                         Utils.id = UUID.randomUUID().toString();
-                                        hd = new HoaDon(Utils.id, listNV.get(0), kh.get(0), now, tongTien);
-                                        session.save(hd);
+                                        Utils.hd = new HoaDon(Utils.id, listNV.get(0), kh.get(0), now, tongTien);
+                                        session.save(Utils.hd);
                                     } else {
-                                        tongTien += Utils.ph.getGiaPhong();
-                                        hd = Utils.laydsHD(Utils.id, kh.get(0)).get(0);
-                                        hd.setTongTien(tongTien);
-                                        Utils.CapNhatHD(hd);
+                                        tongTien += (Utils.ph.getGiaPhong()*Utils.khoangCachHaiNgay(ngStart, ngEnd));
+                                        Utils.hd = Utils.laydsHD(Utils.id, kh.get(0)).get(0);
+                                        Utils.hd.setTongTien(tongTien);
+                                        Utils.CapNhatHD(Utils.hd);
                                     }
 
-                                    ChiTietHoaDon cthd = new ChiTietHoaDon(Utils.ph, hd, Utils.ph.getGiaPhong(), ngStart, ngEnd);
+                                    ChiTietHoaDon cthd = new ChiTietHoaDon(Utils.ph, Utils.hd, Utils.ph.getGiaPhong(), ngStart, ngEnd);
 
                                     session.save(cthd);
                                     trans.commit();
@@ -257,19 +239,19 @@ public class BookRoomController implements Initializable {
         }
 
     }
-
-    //Quay về trang phòng
-    public void quayVeFormPhongHandler(ActionEvent event) throws IOException {
+    
+     //Quay về trang phòng
+     public void quayVeFormPhongHandler(ActionEvent event) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("TimKiemPhong.fxml"));
-
+        
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
-    }
-
-    //reset trang phòng
-    public void resetHandler(ActionEvent event) {
+     }
+     
+     //reset trang phòng
+     public void resetHandler(ActionEvent event) {
         tfTenKH.clear();
         tfMaKH.clear();
         tfGT.clear();
@@ -278,17 +260,33 @@ public class BookRoomController implements Initializable {
         tfGTKH.clear();
         dbEnd.setValue(null);
         dbStart.setValue(null);
-    }
-
-    //Đóng app
-    public void closeAppHandler(ActionEvent event) throws IOException {
+     }
+     
+      //Đóng app
+    public void closeAppHandler(ActionEvent event) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("BookRoom.fxml"));
-
+        
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.close();
-
+        
     }
-
+    
+    public void printBillHandler(ActionEvent event) throws IOException{
+        if (Utils.hd == null){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Cảnh báo ");
+            a.setContentText("Chưa có hóa đơn để in ");
+            a.show();
+        }else {
+            Parent root = FXMLLoader.load(getClass().getResource("HoaDon.fxml"));
+        
+            Scene scene = new Scene(root);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        }
+        
+    }
 }

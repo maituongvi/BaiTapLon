@@ -10,8 +10,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="699.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="699.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="quanlykhachsan.HoaDonController">
    <children>
       <Label text="KNV Hotel">
          <VBox.margin>
@@ -37,7 +36,7 @@
       <HBox alignment="CENTER" prefHeight="34.0" prefWidth="600.0">
          <children>
             <Label text="Số: " />
-            <Label text="mã hóa đơn" />
+            <Label fx:id="lbMaHB" text="mã hóa đơn" />
          </children>
       </HBox>
       <VBox prefHeight="455.0" prefWidth="600.0">
@@ -52,7 +51,7 @@
                         <Font name="Cambria Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Label text="ngày lập hóa đơn ">
+                  <Label fx:id="lbNgayLap" text="ngày lập hóa đơn ">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
@@ -69,7 +68,7 @@
                         <Font name="Cambria Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Label text="tên khách hàng">
+                  <Label fx:id="lbTenKH" text="tên khách hàng">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
@@ -86,20 +85,20 @@
                         <Font name="Cambria Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Label text="tên hoặc mã nhân viên ">
+                  <Label fx:id="lbMaNV" text="tên hoặc mã nhân viên ">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </Label>
                </children>
             </HBox>
-            <GridPane alignment="CENTER" style="-fx-grid-lines-visible: true;">
+            <GridPane fx:id="gpHD" alignment="CENTER" style="-fx-grid-lines-visible: true;" styleClass="grid">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="306.0" minWidth="10.0" prefWidth="61.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="475.0" minWidth="0.0" prefWidth="154.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="475.0" minWidth="10.0" prefWidth="171.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="475.0" minWidth="10.0" prefWidth="104.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="475.0" minWidth="10.0" prefWidth="114.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="306.0" minWidth="10.0" prefWidth="52.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="475.0" minWidth="0.0" prefWidth="109.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="475.0" minWidth="10.0" prefWidth="129.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="475.0" minWidth="10.0" prefWidth="145.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="475.0" minWidth="10.0" prefWidth="146.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -107,31 +106,37 @@
               </rowConstraints>
                <children>
                   <Label text="Phòng" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                  <Label text="Ngày đến" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <Label prefWidth="58.0" text="Ngày đến" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                   <Label text="Ngày đi " GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                   <Label text="Đơn giá" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                   <Label text="Tổng tiền" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                </children>
+               <VBox.margin>
+                  <Insets left="10.0" right="10.0" />
+               </VBox.margin>
             </GridPane>
-            <GridPane>
+            <GridPane alignment="CENTER">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="391.0" minWidth="10.0" prefWidth="253.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="307.0" minWidth="10.0" prefWidth="307.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="391.0" minWidth="10.0" prefWidth="293.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="398.0" minWidth="10.0" prefWidth="267.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Tổng thanh toán">
+                  <Label text="Tổng thanh toán:" GridPane.rowIndex="1">
                      <font>
                         <Font name="Cambria Bold" size="20.0" />
                      </font>
                   </Label>
-                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="21.0" prefWidth="106.0" text="tổng tiền" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                  <Label alignment="TOP_LEFT" contentDisplay="CENTER" prefHeight="21.0" prefWidth="316.0" text="Tổng tiền:" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
                   </Label>
+                  <Label fx:id="lbTongTien" alignment="CENTER" prefHeight="17.0" prefWidth="395.0" text="Label" GridPane.columnIndex="1" />
+                  <Label fx:id="lbThanhToan" alignment="CENTER" prefHeight="17.0" prefWidth="389.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
                <VBox.margin>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

@@ -54,6 +54,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import static quanlykhachsan.NhapKhachHangController.checkNhapTenKhachHang;
 import static quanlykhachsan.NhapKhachHangController.checkSDT;
 import static quanlykhachsan.Utils.dem;
 import static quanlykhachsan.Utils.noiDung;
@@ -444,33 +445,7 @@ public class TimKiemPhongController implements Initializable {
         stage.show();
      }
      
-     //hàm đặt phòng
-     public void datPhongHandler(ActionEvent event){
-        
-//               Alert a = new Alert(Alert.AlertType.INFORMATION);
-//        String soNguoi = tfSucChua.getText();
-//        String loai = (String)cbLoai.getSelectionModel().getSelectedItem();
-//        String gia = tfgia.getText();
-//        boolean t = rdT.isSelected();
-//        boolean f = rdF.isSelected();
-//        String ma = tfMa.getText();
-//        Date bd = Date.from(dbStart.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-//        Date kt = Date.from(dbEnd.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-//        Boolean tp = DatPhong(ma, soNguoi, loai, gia, t, f, bd, kt);
-//        if (tp == true){
-//            a = new Alert(Alert.AlertType.INFORMATION);
-//            a.setTitle("Kết quả ");
-//            a.setContentText(Utils.content);
-//            a.show();
-//            loadAllPhong("", "", -2);
-//        }
-//        else{
-//            a = new Alert(Alert.AlertType.ERROR);
-//            a.setTitle("Nhắc nhở ");
-//            a.setContentText(Utils.content);
-//            a.show();
-//        }
-     }
+   
      
      
      
@@ -522,32 +497,28 @@ public class TimKiemPhongController implements Initializable {
             
     }
      
-//    //sửa Phong
-//    public boolean capNhat(String ma, String soNguoi,String loai, String gia, boolean t, boolean f){
-//        boolean check = true;
-//        
-//        
-//        
-//        
-//        
-//        return check;
-//    }
+
     
     //Xoa mot dong
     public void deleteRowOnTable(ActionEvent event){
-        btnXoa.setOnAction(et->{
+        if (tfMa.getText().isEmpty()){
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("Cảnh báo ");
+            a.setContentText("Bạn chưa chọn phòng để xóa. ");
+            a.show();
+        } else {
+            btnXoa.setOnAction(et->{
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setContentText("Bạn chắc chưa?");
+            alert.setContentText("Bạn chắc chưa? ");
             alert.showAndWait().ifPresent(rs ->{
                 if(rs == ButtonType.OK){
                     Phong ph = this.tbPhong.getSelectionModel().getSelectedItem();
                     Utils.xoaPhong(ph);
                     loadAllPhong("", "", -2);
                 }
-               
             });
-            
         });
+        }
     }
     
     
@@ -564,10 +535,7 @@ public class TimKiemPhongController implements Initializable {
     
     //load đặt
     public void loadDatPhong() throws IOException{
-//        this.lbId.setText(this.tfMa.getText());
-//        this.lbNu.setText(this.tfSucChua.getText());
-//        this.lbPri.setText(this.tfgia.getText());
-//        this.lbTy.setText(this.cbLoai.getText());
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("GiaoDienDP.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
