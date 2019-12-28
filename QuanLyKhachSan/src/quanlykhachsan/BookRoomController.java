@@ -205,9 +205,9 @@ public class BookRoomController implements Initializable {
                                         Utils.CapNhatHD(Utils.hd);
                                     }
 
-                                    ChiTietHoaDon cthd = new ChiTietHoaDon(Utils.ph, Utils.hd, Utils.ph.getGiaPhong(), ngStart, ngEnd);
-
-                                    session.save(cthd);
+                                    Utils.cthd = new ChiTietHoaDon(Utils.ph, Utils.hd, Utils.ph.getGiaPhong(), ngStart, ngEnd);
+                                   
+                                    session.save(Utils.cthd);
                                     trans.commit();
                                     Utils.content = " Bạn đã đặt phòng thành công";
 
@@ -280,8 +280,7 @@ public class BookRoomController implements Initializable {
             a.setContentText("Chưa có hóa đơn để in ");
             a.show();
         }else {
-            Parent root = FXMLLoader.load(getClass().getResource("HoaDon.fxml"));
-        
+            Parent root = FXMLLoader.load((getClass().getResource("HoaDon.fxml")));
             Scene scene = new Scene(root);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);

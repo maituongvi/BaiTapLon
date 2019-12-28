@@ -50,20 +50,27 @@ public class HoaDonController implements Initializable {
         lbTenKH.setText(Utils.hd.getKh().getTenKH());
         lbNgayLap.setText(df.format(Utils.hd.getNgayXuatHD()));
         lbMaNV.setText(String.format("%s",Utils.hd.getNv()));
-        List<ChiTietHoaDon> cthd = Utils.laydsCTHD(Utils.hd);
-        int size = cthd.size();
-        System.out.print(size);
-         
-        
-        for (int i = 0; i < size; i++ ){
-                gpHD.add(setLB(String.format("%s", cthd.get(i).getMaPhong())),0, i + 1);
-                gpHD.add(setLB(df.format(cthd.get(i).getNgayDen())),1, i + 1);
-                gpHD.add(setLB(df.format(cthd.get(i).getNgayDi())),2, i + 1);
-                gpHD.add(setLB(String.format("%,.2f", cthd.get(i).getGiaTien())),3, i + 1);
-                double tien = cthd.get(i).getGiaTien()* Utils.khoangCachHaiNgay(cthd.get(i).getNgayDen(), cthd.get(i).getNgayDi());
-                gpHD.add(setLB(String.format("%,.2f", tien)),4, i + 1);
+        List<ChiTietHoaDon> lscthd = Utils.laydsCTHD(Utils.hd);
+        int size = lscthd.size();
+        if (size == 0){
+                gpHD.add(setLB(String.format("%s", Utils.cthd.getMaPhong())),0,  1);
+                gpHD.add(setLB(df.format(Utils.cthd.getNgayDen())),1,  1);
+                gpHD.add(setLB(df.format(Utils.cthd.getNgayDi())),2, 1);
+                gpHD.add(setLB(String.format("%,.2f", Utils.cthd.getGiaTien())),3, 1);
+                double tien = Utils.cthd.getGiaTien()* Utils.khoangCachHaiNgay(Utils.cthd.getNgayDen(), Utils.cthd.getNgayDi());
+                gpHD.add(setLB(String.format("%,.2f", tien)),4, 1);
 
             }
+        else
+            for (int i = 0; i < size; i++ ){
+                gpHD.add(setLB(String.format("%s", lscthd.get(i).getMaPhong())),0, i + 1);
+                gpHD.add(setLB(df.format(lscthd.get(i).getNgayDen())),1, i + 1);
+                gpHD.add(setLB(df.format(lscthd.get(i).getNgayDi())),2, i + 1);
+                gpHD.add(setLB(String.format("%,.2f", lscthd.get(i).getGiaTien())),3, i + 1);
+                double tien = lscthd.get(i).getGiaTien()* Utils.khoangCachHaiNgay(lscthd.get(i).getNgayDen(), lscthd.get(i).getNgayDi());
+                gpHD.add(setLB(String.format("%,.2f", tien)),4, i + 1);
+            }
+        
         lbTongTien.setText(String.format("%,.2f%s", Utils.hd.getTongTien(), " VNĐ"));
         lbThanhToan.setText(String.format("%,.2f%s", Utils.hd.getTongTien(), " VNĐ"));
         

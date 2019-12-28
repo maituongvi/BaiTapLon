@@ -288,7 +288,7 @@
                         <Insets left="10.0" right="30.0" top="30.0" />
                      </HBox.margin>
                   </Button>
-                  <Button alignment="CENTER" mnemonicParsing="false" prefHeight="40.0" prefWidth="110.0" style="-fx-background-color: #265763;" styleClass="book" stylesheets="@style.css" text="Print Bill">
+                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#printBillHandler" prefHeight="40.0" prefWidth="110.0" style="-fx-background-color: #265763;" styleClass="book" stylesheets="@style.css" text="Print Bill">
                      <HBox.margin>
                         <Insets left="10.0" right="30.0" top="30.0" />
                      </HBox.margin>
