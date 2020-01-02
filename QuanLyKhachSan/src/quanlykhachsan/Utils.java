@@ -10,6 +10,7 @@ import QLKS.pojo.HoaDon;
 import QLKS.pojo.KhachHang;
 import QLKS.pojo.LoaiPhong;
 import QLKS.pojo.NhanVien;
+
 import QLKS.pojo.Phong;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,7 +20,6 @@ import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javax.persistence.Query;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -40,8 +40,9 @@ public class Utils {
     public static String content = "";
     public static String checkNhap = "";
     public static Phong ph;
-    public static NhanVien nv;
-    public static String id = "";
+    public static String id  = "";
+    public static HoaDon hd = null;
+    public static ChiTietHoaDon cthd = null;
     public static List<KhachHang> laydsKH(String kw, int limit){
         Session session = factory.openSession();
         Criteria cr =session.createCriteria(KhachHang.class);
@@ -177,7 +178,19 @@ public class Utils {
         session.close();
     }
     
-      public static List<KhachHang> laydsKHBangSDT(String kw, int limit){
+    public static List<NhanVien> laydsNV(String kw, int limit){
+        Session session = factory.openSession();
+        Criteria cr =session.createCriteria(NhanVien.class);
+        
+        if(!kw.isEmpty()){
+            cr.add(Restrictions.eq("idnhanVien", Integer.parseInt(kw)));
+        }
+        List<NhanVien> listNV =cr.list();
+        session.close();
+        return listNV;
+    }
+    
+    public static List<KhachHang> laydsKHBangSDT(String kw, int limit){
         Session session = factory.openSession();
         Criteria cr =session.createCriteria(KhachHang.class);
         
@@ -192,25 +205,66 @@ public class Utils {
     }
     
     
-    public static List<NhanVien> laydsNV(String kw, int limit){
+    // Lấy danh sách hóa đơn bằng khách hàng
+    public static List<HoaDon> laydsHDKH(String kw){
         Session session = factory.openSession();
-        Criteria cr =session.createCriteria(NhanVien.class);
+        Criteria cr =session.createCriteria(HoaDon.class);
         
-        if(!kw.isEmpty()){
-            cr.add(Restrictions.eq("idnhanVien", Integer.parseInt(kw)));
+        if(kw != null){
+            cr.add(Restrictions.ilike("maHD", kw));
         }
-        List<NhanVien> listNV =cr.list();
+        List<HoaDon> hd =cr.list();
         session.close();
-        return listNV;
+        return hd;
     }
     
+    // Lấy danh sách phòng bằng mã phòng
+    public static List<Phong> laydsPhong(String kw){
+        Session session = factory.openSession();
+        Criteria cr =session.createCriteria(HoaDon.class);
+        
+        if(id != null){
+            cr.add(Restrictions.ilike("maPhong", kw));
+        }
+        List<Phong> ph =cr.list();
+        session.close();
+        return ph;
+    }
     
+    // Lấy danh sách chi tiết hóa đơn
+    public static List<ChiTietHoaDon> laydsCTHD(HoaDon hd){
+        Session session = factory.openSession();
+        Criteria cr =session.createCriteria(ChiTietHoaDon.class);
+        
+        if(id != null){
+            cr.add(Restrictions.eq("hd", hd));
+        }
+        List<ChiTietHoaDon> lHD =cr.list();
+        session.close();
+        return lHD;
+    }
+    
+    //check ngay đặt hàng
     public static List<HoaDon> laydsHD(String id, KhachHang kh){
         Session session = factory.openSession();
         Criteria cr =session.createCriteria(HoaDon.class);
         
         if(id != null){
             cr.add(Restrictions.and(Restrictions.ilike("maHD", id),Restrictions.eq("kh", kh) ));
+        }
+        List<HoaDon> hd =cr.list();
+        session.close();
+        return hd;
+    }
+    
+    //Lấy danh sách hóa đơn nhờ id hóa đơn
+    //check ngay đặt hàng
+    public static List<HoaDon> laydsHDId(String id){
+        Session session = factory.openSession();
+        Criteria cr =session.createCriteria(HoaDon.class);
+        
+        if(id != null){
+            cr.add(Restrictions.and(Restrictions.ilike("maHD", id)));
         }
         List<HoaDon> hd =cr.list();
         session.close();
@@ -254,21 +308,35 @@ public class Utils {
         Date now = new Date();
         return ngay.before(now);
     }
-   
-  
     
-     //check ngay start
-    public static boolean checkNgayStart(Date ngayStart, Date ngayEnd) {
-        boolean check = true;
 
-        check = ngayStart.before(ngayEnd);
-        if (check == false) {
-            noiDung = " Ngày trả phòng phải sau ngày bắt đầu! ";
-        }
-
-        return check;
+    
+    // check ngày đó đã có người đặt chưa?
+    public static List<ChiTietHoaDon> checkNgayDat(Date ngayDen, Date ngayDi, Phong p){
+        Session session = factory.openSession();
+        org.hibernate.Query q =  session.createQuery("FROM ChiTietHoaDon A"
+                + " WHERE A.phong = :room AND (( A.ngayDen < :ngay1 AND A.ngayDi > :ngay1 ) "
+                + "OR ( A.ngayDen < :ngay2 AND A.ngayDi > :ngay2 ) OR "
+                + "( A.ngayDen > :ngay1 AND A.ngayDi < :ngay2 ) )");
+             
+        q.setParameter("ngay1", ngayDen);
+        q.setParameter("ngay2", ngayDi);
+        q.setParameter("room",p);
+        List<ChiTietHoaDon> list = q.list();
+        return list;
+        
     }
-
+    //hàm phụ
+    public static Date removeTime(Date d){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(d);
+        cal.set(Calendar.HOUR_OF_DAY,0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        return cal.getTime();
+    }
+     
     // hàm kiểm tra nhập số người hợp lệ
     public static boolean checkSoNguoi(String s){
         boolean check = false;
@@ -410,7 +478,33 @@ public class Utils {
         return check;
     }
     
-     // NhanVien
+    //check ngay start
+    public static boolean checkNgayStart(Date ngayStart, Date ngayEnd){
+        boolean check = true;
+        Date now = new Date();
+        if (ngayStart.before(ngayEnd) || (removeTime(ngayStart).toString()).equals(removeTime(now).toString()))
+            check = true;
+        else 
+            {
+                check = ngayStart.before(ngayEnd);
+                if (check == false)
+                    noiDung = " Ngày trả phòng phải sau ngày bắt đầu! ";
+            }
+        return check;
+    }
+    
+    //Khoảng cách giữa hai ngày
+    public static int khoangCachHaiNgay(Date a, Date b){
+        Calendar c = Calendar.getInstance();
+        Calendar d = Calendar.getInstance();
+        
+        c.setTime(a);
+        d.setTime(b);
+        return (int)(d.getTime().getTime() -c.getTime().getTime()) / (24 * 3600 * 1000);
+    }
+    
+    
+// NhanVien
     // lấy danh sách nhân viên
     public static List<NhanVien> laydanhsachNV(String kw, int limit){
         Session session = factory.openSession();
@@ -434,8 +528,7 @@ public class Utils {
         
         session.close();
     }
-    
-    // xóa nhân viên
+// xóa nhân viên
     public static void xoaNhanVien(NhanVien nv){
         Session session = factory.openSession();
         
@@ -445,25 +538,5 @@ public class Utils {
         
         session.close();
     }
-    
-    // check ngày đó đã có người đặt chưa?
-    public static List<ChiTietHoaDon> checkNgayDat(Date ngayDen, Date ngayDi, Phong p){
-        Session session = factory.openSession();
-        org.hibernate.Query q =  session.createQuery("FROM ChiTietHoaDon A"
-                + " WHERE A.phong = :room AND (( A.ngayDen < :ngay1 AND A.ngayDi > :ngay1 ) "
-                + "OR ( A.ngayDen < :ngay2 AND A.ngayDi > :ngay2 ) OR "
-                + "( A.ngayDen > :ngay1 AND A.ngayDi < :ngay2 ) )");
-             
-        q.setParameter("ngay1", ngayDen);
-        q.setParameter("ngay2", ngayDi);
-        q.setParameter("room",p);
-        List<ChiTietHoaDon> list = q.list();
-        return list;
-        
-    }
-    
-   
-    
-    
    
 }

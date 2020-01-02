@@ -31,6 +31,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -94,6 +95,23 @@ public class BookRoomController implements Initializable {
         tfGTKH.clear();
         dbEnd.setValue(null);
         dbStart.setValue(null);
+        
+        dbStart.setDayCellFactory(picker -> new DateCell() {
+                public void updateItem(LocalDate date, boolean empty) {
+                    super.updateItem(date, empty);
+                    LocalDate today = LocalDate.now();
+
+                    setDisable(empty || date.compareTo(today) < 0 );
+                }
+            });
+        dbEnd.setDayCellFactory(picker -> new DateCell() {
+                public void updateItem(LocalDate date, boolean empty) {
+                    super.updateItem(date, empty);
+                    LocalDate today = LocalDate.now();
+
+                    setDisable(empty || date.compareTo(today) < 0 );
+                }
+            });
         
     }    
     

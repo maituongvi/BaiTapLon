@@ -523,13 +523,13 @@ public class TimKiemPhongController implements Initializable {
     
     
     //Quay về trang chủ
-    public void trangChuHandler(ActionEvent event) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("TrangChu.fxml"));
-        
-        Scene scene = new Scene(root);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+    public void troVe(ActionEvent event) throws IOException{
+        Parent login = FXMLLoader.load(getClass().getResource("GiaoDienNhanVien.fxml"));
+        Scene loginScene = new Scene(login);
+
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(loginScene);
+        window.show();
     }
     
     

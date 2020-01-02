@@ -6,6 +6,7 @@
 package quanlykhachsan;
 
 import QLKS.pojo.KhachHang;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -20,7 +21,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -34,6 +39,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -256,6 +262,14 @@ public class NhapKhachHangController implements Initializable {
        
     }
     
+    public void troVe(ActionEvent event) throws IOException{
+        Parent login = FXMLLoader.load(getClass().getResource("GiaoDienNhanVien.fxml"));
+        Scene loginScene = new Scene(login);
+
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(loginScene);
+        window.show();
+    }
  
    
 
