@@ -12,8 +12,13 @@ import QLKS.pojo.LoaiPhong;
 import QLKS.pojo.NhanVien;
 
 import QLKS.pojo.Phong;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -183,7 +188,7 @@ public class Utils {
         Criteria cr =session.createCriteria(NhanVien.class);
         
         if(!kw.isEmpty()){
-            cr.add(Restrictions.eq("idnhanVien", Integer.parseInt(kw)));
+            cr.add(Restrictions.eq("idNhanVien", Integer.parseInt(kw)));
         }
         List<NhanVien> listNV =cr.list();
         session.close();
@@ -502,41 +507,42 @@ public class Utils {
         d.setTime(b);
         return (int)(d.getTime().getTime() -c.getTime().getTime()) / (24 * 3600 * 1000);
     }
+  
     
-    
-// NhanVien
-    // lấy danh sách nhân viên
-    public static List<NhanVien> laydanhsachNV(String kw, int limit){
-        Session session = factory.openSession();
-        Criteria cr =session.createCriteria(NhanVien.class);
+    //Khoảng cách giữa hai ngày
+    public static ArrayList<Double> listDoanhThuT(int nam) throws ParseException{
+       Session session = factory.openSession();
+       ArrayList<Double> ls =  new ArrayList<>(12);
+       for (int i = 1; i <= 12; i++){
+           int thang = i;
+            org.hibernate.Query q =  session.createQuery("SELECT sum(A.tongTien)"
+                    +" FROM HoaDon A"
+                    + " WHERE (year(A.ngayXuatHD)=:nam and"
+                    + " month(A.ngayXuatHD)=:thang)");
+            q.setParameter("nam", nam);
+            q.setParameter("thang", thang);
+            
+            List r = q.list();
+            if (r.get(0) != null){
+                ls.add(i - 1, (Double) r.get(0));
+            }else
+                ls.add(i - 1, 0.0);
+       }
+       
         
-        if(!kw.isEmpty()){
-            cr.add(Restrictions.ilike("tenNV", String.format("%%%s%%", kw)));
+       return ls;
+    }
+    // hàm kiểm tra nhập năm thống kê
+    public static boolean checkNam(String s){
+        boolean check = false;
+        Pattern pattern = Pattern.compile("^\\d{1,5}$");
+        Matcher mat = pattern.matcher(s);
+        if (Integer.parseInt(s) > 0){
+            if(mat.find()){
+            check = true;
         }
-        List<NhanVien> nv =cr.list();
-        session.close();
-        return nv;
+        }
+        
+        return check;
     }
-    
-    //thêm hoặc cập nhật nhân viên
-    public static void CapNhatNhanVien(NhanVien nv){
-        Session session = factory.openSession();
-        
-        Transaction trans = session.beginTransaction();
-        session.saveOrUpdate(nv);
-        trans.commit();
-        
-        session.close();
-    }
-// xóa nhân viên
-    public static void xoaNhanVien(NhanVien nv){
-        Session session = factory.openSession();
-        
-        Transaction trans = session.beginTransaction();
-        session.delete(nv);
-        trans.commit();
-        
-        session.close();
-    }
-   
 }
