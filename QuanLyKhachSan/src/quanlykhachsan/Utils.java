@@ -188,7 +188,7 @@ public class Utils {
         Criteria cr =session.createCriteria(NhanVien.class);
         
         if(!kw.isEmpty()){
-            cr.add(Restrictions.eq("idNhanVien", Integer.parseInt(kw)));
+            cr.add(Restrictions.eq("idnhanVien", Integer.parseInt(kw)));
         }
         List<NhanVien> listNV =cr.list();
         session.close();
@@ -545,4 +545,40 @@ public class Utils {
         
         return check;
     }
+    // NhanVien
+    // lấy danh sách nhân viên
+    public static List<NhanVien> laydanhsachNV(String kw, int limit){
+        Session session = factory.openSession();
+        Criteria cr =session.createCriteria(NhanVien.class);
+        
+        if(!kw.isEmpty()){
+            cr.add(Restrictions.ilike("tenNV", String.format("%%%s%%", kw)));
+        }
+        List<NhanVien> nv =cr.list();
+        session.close();
+        return nv;
+    }
+    
+    //thêm hoặc cập nhật nhân viên
+    public static void CapNhatNhanVien(NhanVien nv){
+        Session session = factory.openSession();
+        
+        Transaction trans = session.beginTransaction();
+        session.saveOrUpdate(nv);
+        trans.commit();
+        
+        session.close();
+    }
+// xóa nhân viên
+    public static void xoaNhanVien(NhanVien nv){
+        Session session = factory.openSession();
+        
+        Transaction trans = session.beginTransaction();
+        session.delete(nv);
+        trans.commit();
+        
+        session.close();
+    }
+   
+
 }

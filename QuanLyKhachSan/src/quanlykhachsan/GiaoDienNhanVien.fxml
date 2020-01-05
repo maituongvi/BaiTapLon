@@ -64,7 +64,7 @@
                         <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />
                      </HBox.margin>
                   </Button>
-                  <Button contentDisplay="TOP" layoutX="443.0" layoutY="222.0" mnemonicParsing="false" style="-fx-background-color: rgb(112,118,218,0.3);" text="Thống kê">
+                  <Button contentDisplay="TOP" layoutX="443.0" layoutY="222.0" mnemonicParsing="false" onAction="#bieuDo" style="-fx-background-color: rgb(112,118,218,0.3);" text="Thống kê">
                      <graphic>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                            <image>

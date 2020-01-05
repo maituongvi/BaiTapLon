@@ -172,7 +172,7 @@ public class BieuDoController implements Initializable {
     }
     // bà chèn link trang chủ vô nhen
     public void quayLaiHandler(ActionEvent e) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("TimKiemPhong.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("GiaoDienNhanVien.fxml"));
         
         Scene scene = new Scene(root);
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
